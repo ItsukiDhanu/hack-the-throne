@@ -1,0 +1,561 @@
+"use client";
+
+import Image from 'next/image';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { clsx } from 'clsx';
+import type { Content } from './lib/content';
+
+type FormState = 'idle' | 'submitting' | 'success' | 'error';
+
+const demoContent: Content = {
+  hero: {
+    title: 'Hack The Throne',
+    tagline: 'Build together at AIT CSE. Open only to 2nd Year CSE students.',
+    badges: ['AIT CSE campus', 'On-campus', '2nd Year CSE only', 'Mentors on-call'],
+  },
+  details: [
+    { title: 'Venue', body: 'AIT CSE Campus' },
+    { title: 'Eligibility', body: '2nd Year CSE students only' },
+    { title: 'Tracks', body: 'Mobility · Civic tools · Resilience · Open data' },
+    { title: 'Support', body: 'Food, Wi-Fi, charging, nap pods, wellness room' },
+    { title: 'Team rules', body: 'Teams of 2–5; fresh work only' },
+    { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
+  ],
+  schedule: [],
+  team: [
+    { name: 'Ayush Kaushik', role: 'Lead Organizer' },
+    { name: 'Ethan Dsouza', role: 'Tech Lead (Co-Organizer)' },
+    { name: 'Ayush Mallick', role: 'Logistics & Marketing Lead' },
+    { name: 'Dhanush V P', role: 'Tech & Organizing Coordinator' },
+    { name: 'Abhay Emmanuel', role: 'Tech & Organizing Coordinator' },
+  ],
+  faqs: [
+    { q: "What's a hackathon?", a: 'A fast-paced event where teams build and demo solutions in a short time (often 24–48 hours).' },
+    { q: 'What do we do there?', a: 'Form teams, pick a problem, design, code, ship a demo, and present to judges.' },
+    { q: 'Types of hackathons?', a: 'Thematic (health, civic), open innovation, AI/ML, hardware, and product design sprints.' },
+    { q: 'Prerequisite skills?', a: 'Basics help: coding or no-code, Git, slides/storytelling, and collaboration. Mixed skills win.' },
+    { q: 'Use of AI?', a: 'AI accelerates ideation, coding, testing, and content; cite sources and keep outputs transparent.' },
+    { q: 'Phases of a hackathon?', a: 'Ideation → build → push to Git/GitHub → polish demo → present with a clear deck.' },
+    { q: 'How to achieve good projects?', a: 'Scope tightly, pick one painful user problem, ship a working core, and demo clearly.' },
+    { q: 'How to win?', a: 'Solve a real pain, show working product, clear story, impact, and next steps. Rehearse your demo.' },
+    { q: "Is it just coding?", a: 'No. Product thinking, design, storytelling, and teamwork matter as much as code.' },
+    { q: 'Benefits of participating?', a: 'Portfolio-worthy builds, networking, prizes, recruiter visibility, and learning under pressure.' },
+  ],
+  stats: [
+    { title: 'Eligibility', value: '2nd Year CSE', caption: 'AIT Department of CSE' },
+    { title: 'Mode', value: 'On-campus', caption: 'AIT CSE Campus' },
+    { title: 'Support', value: 'Mentors', caption: 'Product · AI/ML · DevOps' },
+  ],
+  registerNote: 'Open only to 2nd Year CSE students. Confirm your details to request a slot.',
+};
+
+const navLinks = [
+  { href: 'about', label: 'Highlights' },
+  { href: 'team', label: 'Team' },
+  { href: 'faq', label: 'FAQ' },
+  { href: 'register', label: 'Register' },
+];
+
+const explainerPoints = [
+  'Sprint with a team to solve a focused problem, then demo live.',
+  'Learn fast from mentors across product, AI/ML, DevOps, and design.',
+  'Ship a working build, share the story, and get feedback on the spot.',
+  'Network with peers who want to build, not just talk.',
+];
+
+const galleryImages = [
+  {
+    src: 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Teammates collaborating at laptops',
+    caption: 'Product sprinting side-by-side',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Crowd watching a live demo',
+    caption: 'Live demos and quick feedback',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?auto=format&fit=crop&w=1200&q=80',
+    alt: 'Mentor guiding a student',
+    caption: 'Mentors on-call to unblock you',
+  },
+];
+
+export default function Page() {
+  const [formState, setFormState] = useState<FormState>('idle');
+  const [error, setError] = useState<string | null>(null);
+  const [content, setContent] = useState<Content | null>(null);
+  const [loadingContent, setLoadingContent] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch('/api/content');
+        if (!res.ok) throw new Error('no-content');
+        const data = await res.json();
+        setContent(data.content as Content);
+      } catch {
+        setContent(null);
+      } finally {
+        setLoadingContent(false);
+      }
+    }
+    load();
+  }, []);
+
+  const data = content ?? demoContent;
+  const stats = data.stats ?? demoContent.stats!;
+  const faqs = useMemo(() => data.faqs || [], [data]);
+  const details = useMemo(() => data.details || [], [data]);
+  const team = useMemo(() => data.team || [], [data]);
+  const badges = (data.hero.badges || []).length ? data.hero.badges : demoContent.hero.badges;
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!content) {
+      setError('Registration is closed until an event is published.');
+      setFormState('error');
+      return;
+    }
+    setFormState('submitting');
+    setError(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json.error || 'Something went wrong. Please try again.');
+        setFormState('error');
+        return;
+      }
+
+      setFormState('success');
+      form.reset();
+    } catch (err) {
+      setError('Network error. Please try again.');
+      setFormState('error');
+    }
+  }
+
+  const noContent = !loadingContent && !content;
+
+  return (
+    <div className="relative overflow-hidden">
+      <div className="bg-grid" aria-hidden />
+      <div className="pointer-events-none absolute inset-0 opacity-60" aria-hidden>
+        <div className="absolute inset-0 bg-hero-radial" />
+      </div>
+
+      <header className="sticky top-0 z-30">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(124,140,255,0.16),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(89,192,255,0.14),transparent_30%)]" aria-hidden />
+        <div className="relative border-b border-white/10 bg-base-950/85 shadow-[0_12px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" aria-hidden />
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+            <div className="flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-white shadow-[0_12px_50px_rgba(124,140,255,0.35)]">
+              <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-accent-blue to-accent-secondary shadow-[0_0_0_6px_rgba(124,140,255,0.18)]" />
+              <span className="tracking-wide">Hack The Throne</span>
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-primary">AIT CSE</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-sm text-base-300">
+              {navLinks.map((item) => (
+                <a
+                  key={item.href}
+                  className="rounded-full border border-white/10 bg-white/[0.02] px-3.5 py-2 text-white/80 transition hover:border-accent-blue/40 hover:bg-white/10 hover:text-white shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
+                  href={`#${item.href}`}
+                >
+                  {item.label}
+                </a>
+              ))}
+              <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10 transition hover:shadow-[0_15px_45px_rgba(124,140,255,0.45)]" href="#register">
+                Register
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-10 space-y-16">
+        {noContent && (
+          <div className="glass mb-4 flex items-center gap-3 rounded-2xl px-4 py-3 text-sm text-accent-primary">
+            <span className="h-2.5 w-2.5 rounded-full bg-accent-blue" />
+            No event is published yet. Content below is a preview layout; registration stays closed until publish.
+          </div>
+        )}
+
+        <section id="top" className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-accent-primary">
+              AIT CSE · On-campus · 2nd Year CSE only
+            </div>
+            <div className="space-y-3">
+              <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">{data.hero.title}</h1>
+              <p className="max-w-2xl text-lg text-base-300">{data.hero.tagline}</p>
+            </div>
+            <div className="flex flex-wrap gap-3 text-sm text-base-100">
+              {badges.map((b) => (
+                <Pill key={b} label={b} />
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                className={clsx(
+                  'rounded-2xl bg-gradient-to-r from-accent-blue to-accent-secondary px-5 py-3 text-base font-semibold text-base-950 shadow-lg shadow-glow',
+                  noContent && 'opacity-60 pointer-events-none'
+                )}
+                href="#register"
+              >
+                {noContent ? 'Registration closed' : 'Register now'}
+              </a>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {stats.map((s) => (
+                <StatCard key={s.title} title={s.title} value={s.value} caption={s.caption} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="hackathon" className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="glass rounded-3xl px-6 py-6 shadow-deep">
+            <SectionHeading eyebrow="What is a hackathon?" title="Build, demo, and get feedback fast" description="Two days to form a team, pick a problem, ship a working demo, and present it live." />
+            <div className="mt-4 space-y-3 text-base text-base-200">
+              {explainerPoints.map((point) => (
+                <div key={point} className="flex items-start gap-3">
+                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-accent-blue to-accent-secondary shadow-[0_0_0_6px_rgba(124,140,255,0.18)]" />
+                  <p>{point}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10" href="#register">
+                Join the sprint
+              </a>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {galleryImages.slice(0, 2).map((img) => (
+              <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep">
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  width={1200}
+                  height={800}
+                  unoptimized
+                  className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-base-950/80 via-base-950/30 to-transparent" aria-hidden />
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <p className="text-sm font-semibold text-white">{img.caption}</p>
+                  <p className="text-xs text-base-200">{img.alt}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="about" className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="glass rounded-3xl px-6 py-6 shadow-deep">
+            <SectionHeading eyebrow="Why this sprint" title="Designed for fast, confident shipping" description={data.hero.tagline} />
+            <div className="mt-4 flex flex-wrap gap-2 text-sm">
+              {badges.map((t) => (
+                <Pill key={t} label={t} subtle />
+              ))}
+            </div>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {details.slice(0, 4).map((d) => (
+              <InfoCard key={d.title} title={d.title} body={d.body} />
+            ))}
+          </div>
+        </section>
+
+        <section id="team" className="space-y-4">
+          <SectionHeading eyebrow="People" title="Organizers and mentors" description="Fast feedback, crisp prompts, and grounded product guidance." />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {team.length ? (
+              team.map((m) => <TeamCard key={m.name} member={m} />)
+            ) : (
+              <p className="text-base-300">Team roster will appear once published.</p>
+            )}
+          </div>
+        </section>
+
+        <section id="faq" className="space-y-4">
+          <SectionHeading eyebrow="FAQ" title="Details that matter" description="What to bring, who can join, and how we run judging." />
+          <div className="grid gap-3 md:grid-cols-2">
+            {faqs.length ? (
+              faqs.map((item) => <FaqCard key={item.q} item={item} />)
+            ) : (
+              <p className="text-base-300">FAQs will be posted soon.</p>
+            )}
+          </div>
+        </section>
+
+        <section id="gallery" className="space-y-4">
+          <SectionHeading eyebrow="Vibe" title="Hackathon moments" description="Energy, focus, and demos — here’s what it looks like when teams build together." />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {galleryImages.map((img) => (
+              <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep">
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  width={1200}
+                  height={800}
+                  unoptimized
+                  className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-base-950/85 via-base-950/40 to-transparent" aria-hidden />
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <p className="text-sm font-semibold text-white">{img.caption}</p>
+                  <p className="text-xs text-base-200">{img.alt}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="register" className="grid gap-6">
+          <div className="glass rounded-3xl px-6 py-6 shadow-deep">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-accent-primary">Apply to join</p>
+                <h2 className="text-2xl font-semibold text-white">Registration</h2>
+                <p className="text-base-300">{content?.registerNote || 'Registration opens when the next event is published.'}</p>
+              </div>
+              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent-primary">On-site only</span>
+            </div>
+
+            <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Team Name" name="teamName" placeholder="Your team name" required disabled={noContent} />
+              </div>
+
+              <GroupHeading title="Leader (C)" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Leader Name" name="leaderName" placeholder="Full name" required disabled={noContent} />
+                <Field label="Section" name="leaderSection" placeholder="Section" required disabled={noContent} />
+                <Field label="Year" name="leaderYear" placeholder="Year" required disabled={noContent} />
+                <Field label="USN" name="leaderUSN" placeholder="USN" required disabled={noContent} />
+                <Field label="AUID" name="leaderAUID" placeholder="AUID" required disabled={noContent} />
+                <Field label="WhatsApp Number" name="leaderWhatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
+                <Field label="Acharya Mail ID" name="leaderEmail" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+              </div>
+
+              <GroupHeading title="Member 1 (C)" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Name" name="member1Name" placeholder="Full name" required disabled={noContent} />
+                <Field label="Section" name="member1Section" placeholder="Section" required disabled={noContent} />
+                <Field label="Year" name="member1Year" placeholder="Year" required disabled={noContent} />
+                <Field label="USN" name="member1USN" placeholder="USN" required disabled={noContent} />
+                <Field label="AUID" name="member1AUID" placeholder="AUID" required disabled={noContent} />
+                <Field label="WhatsApp Number" name="member1Whatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
+                <Field label="Acharya Mail ID" name="member1Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+              </div>
+
+              <GroupHeading title="Member 2 (C)" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Name" name="member2Name" placeholder="Full name" required disabled={noContent} />
+                <Field label="Section" name="member2Section" placeholder="Section" required disabled={noContent} />
+                <Field label="Year" name="member2Year" placeholder="Year" required disabled={noContent} />
+                <Field label="USN" name="member2USN" placeholder="USN" required disabled={noContent} />
+                <Field label="AUID" name="member2AUID" placeholder="AUID" required disabled={noContent} />
+                <Field label="WhatsApp Number" name="member2Whatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
+                <Field label="Acharya Mail ID" name="member2Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+              </div>
+
+              <GroupHeading title="Member 3 (C)" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Name" name="member3Name" placeholder="Full name" required disabled={noContent} />
+                <Field label="Section" name="member3Section" placeholder="Section" required disabled={noContent} />
+                <Field label="Year" name="member3Year" placeholder="Year" required disabled={noContent} />
+                <Field label="USN" name="member3USN" placeholder="USN" required disabled={noContent} />
+                <Field label="AUID" name="member3AUID" placeholder="AUID" required disabled={noContent} />
+                <Field label="WhatsApp Number" name="member3Whatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
+                <Field label="Acharya Mail ID" name="member3Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+              </div>
+
+              <GroupHeading title="Member 4 (optional)" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Name" name="member4Name" placeholder="Full name" disabled={noContent} />
+                <Field label="Section" name="member4Section" placeholder="Section" disabled={noContent} />
+                <Field label="Year" name="member4Year" placeholder="Year" disabled={noContent} />
+                <Field label="USN" name="member4USN" placeholder="USN" disabled={noContent} />
+                <Field label="AUID" name="member4AUID" placeholder="AUID" disabled={noContent} />
+                <Field label="WhatsApp Number" name="member4Whatsapp" type="tel" placeholder="Contact number" disabled={noContent} />
+                <Field label="Acharya Mail ID" name="member4Email" type="email" placeholder="name@acharya.ac.in" disabled={noContent} />
+              </div>
+
+              {error && <p className="text-sm text-red-400">{error}</p>}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  className={clsx(
+                    'rounded-2xl px-5 py-3 text-base font-semibold shadow-lg shadow-glow',
+                    'bg-gradient-to-r from-accent-blue to-accent-secondary text-base-950',
+                    (formState === 'submitting' || noContent) && 'opacity-80'
+                  )}
+                  type="submit"
+                  disabled={formState === 'submitting' || noContent}
+                >
+                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'Submit registration'}
+                </button>
+                {formState === 'success' && (
+                  <span className="rounded-2xl bg-accent-primary/10 px-3 py-2 text-sm font-semibold text-accent-primary">Thanks! We received your registration.</span>
+                )}
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-white/5 bg-base-900/60 py-10 text-base-300">
+        <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-4 px-4 text-sm">
+          <div>
+            <p className="font-semibold text-white">Hack The Throne</p>
+            <p>AIT CSE Campus</p>
+          </div>
+          <div>
+            <p className="font-semibold text-white">Contact</p>
+            <p>hello@pulsehack.io · +1 (555) 0199-204</p>
+          </div>
+          <div>
+            <p className="font-semibold text-white">Social</p>
+            <div className="flex gap-2">
+              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue" href="#">Twitter</a>
+              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue" href="#">LinkedIn</a>
+              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue" href="#">Instagram</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-primary">{eyebrow}</p>
+      <h2 className="text-2xl font-semibold text-white">{title}</h2>
+      <p className="text-base text-base-300">{description}</p>
+    </div>
+  );
+}
+
+function GroupHeading({ title }: { title: string }) {
+  return (
+    <p className="text-sm font-semibold text-white/80">{title}</p>
+  );
+}
+
+function Pill({ label, subtle }: { label: string; subtle?: boolean }) {
+  return (
+    <span
+      className={clsx(
+        'rounded-full px-3 py-1 text-xs font-semibold',
+        subtle
+          ? 'border border-white/10 bg-white/5 text-base-200'
+          : 'border border-white/10 bg-white/10 text-accent-primary shadow-[0_10px_40px_rgba(124,140,255,0.18)]'
+      )}
+    >
+      {label}
+    </span>
+  );
+}
+
+function StatCard({ title, value, caption }: { title: string; value: string; caption: string }) {
+  return (
+    <div className="glass rounded-2xl p-4 shadow-card">
+      <p className="text-sm text-base-300">{title}</p>
+      <p className="text-3xl font-semibold text-white">{value}</p>
+      <p className="text-sm text-base-300">{caption}</p>
+    </div>
+  );
+}
+
+function InfoCard({ title, body, subtle }: { title: string; body: string; subtle?: boolean }) {
+  return (
+    <div
+      className={clsx(
+        'rounded-2xl border border-white/5 p-4 shadow-card',
+        subtle ? 'bg-white/5' : 'glass'
+      )}
+    >
+      <p className="text-lg font-semibold text-white">{title}</p>
+      <p className="text-sm text-base-300">{body}</p>
+    </div>
+  );
+}
+
+function TeamCard({ member }: { member: { name: string; role: string } }) {
+  return (
+    <div className="glass rounded-2xl p-4 shadow-card">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent-blue to-accent-secondary text-base font-bold text-base-950">
+        {member.name
+          .split(' ')
+          .map((p) => p[0])
+          .join('')}
+      </div>
+      <p className="mt-3 text-lg font-semibold text-white">{member.name}</p>
+      <p className="text-sm text-base-300">{member.role}</p>
+    </div>
+  );
+}
+
+function FaqCard({ item }: { item: { q: string; a: string } }) {
+  return (
+    <div className="rounded-2xl border border-white/5 bg-white/5 p-4">
+      <p className="text-lg font-semibold text-white">{item.q}</p>
+      <p className="text-sm text-base-300">{item.a}</p>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  name,
+  type = 'text',
+  placeholder,
+  required,
+  disabled,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <label className="block text-sm text-base-100">
+      <span className="mb-2 block font-semibold text-white">{label}</span>
+      <input
+        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none ring-0 transition focus:border-accent-blue"
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+      />
+    </label>
+  );
+}

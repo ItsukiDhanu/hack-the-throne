@@ -1,0 +1,25 @@
+import { NextResponse } from 'next/server';
+import { listRegistrations } from '@/app/lib/store';
+
+export async function GET(request: Request) {
+  const adminToken = process.env.ADMIN_TOKEN;
+  const authHeader = request.headers.get('authorization');
+  if (adminToken) {
+    const token = authHeader?.replace(/Bearer\s+/i, '').trim();
+    if (!token || token !== adminToken) {
+      return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
+  const { searchParams } = new URL(request.url);
+  const limitParam = searchParams.get('limit');
+  const limit = Math.max(1, Math.min(500, Number(limitParam) || 100));
+
+  try {
+    const registrations = await listRegistrations(limit);
+    return NextResponse.json({ ok: true, registrations });
+  } catch (err) {
+    console.error('listRegistrations error', err);
+    return NextResponse.json({ ok: false, error: 'Failed to load registrations' }, { status: 500 });
+  }
+}

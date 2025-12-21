@@ -1,0 +1,159 @@
+"use client";
+
+import { useMemo, useState } from 'react';
+import type { RegistrationPayload } from '@/app/lib/store';
+
+function toCsv(rows: RegistrationPayload[]) {
+  const headers = [
+    'id','createdAt','teamName',
+    'leaderName','leaderSection','leaderYear','leaderUSN','leaderAUID','leaderWhatsapp','leaderEmail',
+    'member1Name','member1Section','member1Year','member1USN','member1AUID','member1Whatsapp','member1Email',
+    'member2Name','member2Section','member2Year','member2USN','member2AUID','member2Whatsapp','member2Email',
+    'member3Name','member3Section','member3Year','member3USN','member3AUID','member3Whatsapp','member3Email',
+    'member4Name','member4Section','member4Year','member4USN','member4AUID','member4Whatsapp','member4Email',
+  ];
+  const escape = (v: unknown) => {
+    if (v === undefined || v === null) return '';
+    const s = String(v);
+    if (s.includes('"') || s.includes(',') || s.includes('\n')) return '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  };
+  const lines = [headers.join(',')];
+  for (const row of rows) {
+    lines.push(headers.map((h) => escape((row as any)[h])).join(','));
+  }
+  return lines.join('\n');
+}
+
+export default function RegistrationsPage() {
+  const [token, setToken] = useState('');
+  const [limit, setLimit] = useState(100);
+  const [registrations, setRegistrations] = useState<RegistrationPayload[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+
+  async function load() {
+    setLoading(true);
+    setError(null);
+    setStatus(null);
+    try {
+      const res = await fetch(`/api/registrations?limit=${limit}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to load');
+      setRegistrations(data.registrations || []);
+      setStatus(`Loaded ${data.registrations?.length || 0} registrations`);
+    } catch (err: any) {
+      setError(err?.message || 'Error loading');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function downloadCsv() {
+    const csv = toCsv(registrations);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'registrations.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const latest = useMemo(() => registrations.slice(0, 5), [registrations]);
+
+  const memberCount = (r: RegistrationPayload) => {
+    let count = 4; // leader + member1-3
+    if (r.member4Name) count += 1;
+    return count;
+  };
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-10 space-y-6">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold text-white">Admin · Registrations</h1>
+        <a className="text-sm text-blue-300 underline" href="/">Back to site</a>
+      </div>
+      <p className="text-base text-slate-200">Fetch recent registrations and export to CSV. Provide the admin token if configured.</p>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <label className="flex flex-col gap-1 text-sm text-slate-200">
+          Admin token
+          <input
+            type="password"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white"
+            placeholder="Bearer token"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm text-slate-200">
+          Limit (max 500)
+          <input
+            type="number"
+            min={1}
+            max={500}
+            value={limit}
+            onChange={(e) => setLimit(Number(e.target.value) || 1)}
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white"
+          />
+        </label>
+        <div className="flex items-end gap-3">
+          <button
+            onClick={load}
+            disabled={loading}
+            className="rounded-lg bg-gradient-to-r from-accent-blue to-accent-secondary px-4 py-2 font-semibold text-base-950 shadow-lg shadow-glow disabled:opacity-60"
+            type="button"
+          >
+            {loading ? 'Loading…' : 'Load'}
+          </button>
+          <button
+            onClick={downloadCsv}
+            disabled={!registrations.length}
+            className="rounded-lg border border-white/10 px-4 py-2 font-semibold text-white hover:border-accent-blue disabled:opacity-60"
+            type="button"
+          >
+            Download CSV
+          </button>
+        </div>
+      </div>
+
+      {status && <p className="text-sm text-emerald-400">{status}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
+
+      <div className="overflow-auto rounded-2xl border border-white/10 bg-white/5 shadow-card">
+        <table className="min-w-full text-sm text-slate-200">
+          <thead className="bg-white/5 text-xs uppercase tracking-wide text-slate-300">
+            <tr>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-left">Leader</th>
+              <th className="px-3 py-2 text-left">Created</th>
+              <th className="px-3 py-2 text-left">Members</th>
+            </tr>
+          </thead>
+          <tbody>
+            {latest.map((r) => (
+              <tr key={r.id} className="border-t border-white/5">
+                <td className="px-3 py-2 font-semibold text-white">{r.teamName}</td>
+                <td className="px-3 py-2">
+                  <div className="font-semibold text-white">{r.leaderName}</div>
+                  <div className="text-xs text-slate-400">{r.leaderEmail}</div>
+                </td>
+                <td className="px-3 py-2 text-slate-400">{new Date(Number(r.createdAt || 0)).toLocaleString()}</td>
+                <td className="px-3 py-2 text-slate-400">{memberCount(r)} members</td>
+              </tr>
+            ))}
+            {!latest.length && (
+              <tr>
+                <td className="px-3 py-3 text-slate-400" colSpan={4}>No registrations loaded yet.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
