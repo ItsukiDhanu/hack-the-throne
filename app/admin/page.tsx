@@ -66,13 +66,14 @@ export default function AdminPage() {
     setLoading(true);
     setStatus(null);
     setError(null);
+    const auth = token.trim();
     try {
       const parsed = ContentSchema.parse(JSON.parse(jsonText));
       const res = await fetch('/api/content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: auth ? `Bearer ${auth}` : '',
         },
         body: JSON.stringify(parsed),
       });

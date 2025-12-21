@@ -37,9 +37,10 @@ export default function RegistrationsPage() {
     setLoading(true);
     setError(null);
     setStatus(null);
+    const auth = token.trim();
     try {
       const res = await fetch(`/api/registrations?limit=${limit}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        headers: auth ? { Authorization: `Bearer ${auth}` } : {},
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to load');
