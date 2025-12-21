@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Content, ContentSchema } from '../lib/content';
 
 const template: Content = {
@@ -46,7 +47,9 @@ const template: Content = {
 };
 
 export default function AdminPage() {
-  const [token, setToken] = useState('');
+  const search = useSearchParams();
+  const presetToken = search.get('token')?.trim() || '';
+  const [token, setToken] = useState(presetToken);
   const [jsonText, setJsonText] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

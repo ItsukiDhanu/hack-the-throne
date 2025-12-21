@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { RegistrationPayload } from '@/app/lib/store';
+import { useSearchParams } from 'next/navigation';
 
 function toCsv(rows: RegistrationPayload[]) {
   const headers = [
@@ -26,7 +27,9 @@ function toCsv(rows: RegistrationPayload[]) {
 }
 
 export default function RegistrationsPage() {
-  const [token, setToken] = useState('');
+  const search = useSearchParams();
+  const presetToken = search.get('token')?.trim() || '';
+  const [token, setToken] = useState(presetToken);
   const [limit, setLimit] = useState(100);
   const [registrations, setRegistrations] = useState<RegistrationPayload[]>([]);
   const [loading, setLoading] = useState(false);
