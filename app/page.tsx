@@ -427,7 +427,7 @@ export default function Page() {
           </div>
           <div>
             <p className="font-semibold text-white">Contact</p>
-            <p>hello@pulsehack.io · +1 (555) 0199-204</p>
+            <p>dhanushvpshetty@gmail.com · +91 9606726468</p>
           </div>
           <div>
             <p className="font-semibold text-white">Social</p>
