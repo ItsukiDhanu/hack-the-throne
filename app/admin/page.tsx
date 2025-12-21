@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Content, ContentSchema } from '../lib/content';
 
@@ -46,7 +46,7 @@ const template: Content = {
   registerNote: 'Seats limited to 20 teams. We will confirm within 48 hours.',
 };
 
-export default function AdminPage() {
+function AdminInner() {
   const search = useSearchParams();
   const presetToken = search.get('token')?.trim() || '';
   const [token, setToken] = useState(presetToken);
@@ -131,5 +131,13 @@ export default function AdminPage() {
         {error && <p className="text-sm text-red-400">{error}</p>}
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-white">Loading…</div>}>
+      <AdminInner />
+    </Suspense>
   );
 }

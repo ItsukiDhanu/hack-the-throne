@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import type { RegistrationPayload } from '@/app/lib/store';
 import { useSearchParams } from 'next/navigation';
 
@@ -26,7 +26,7 @@ function toCsv(rows: RegistrationPayload[]) {
   return lines.join('\n');
 }
 
-export default function RegistrationsPage() {
+function RegistrationsInner() {
   const search = useSearchParams();
   const presetToken = search.get('token')?.trim() || '';
   const [token, setToken] = useState(presetToken);
@@ -161,5 +161,13 @@ export default function RegistrationsPage() {
         </table>
       </div>
     </div>
+  );
+}
+
+export default function RegistrationsPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-white">Loading…</div>}>
+      <RegistrationsInner />
+    </Suspense>
   );
 }
