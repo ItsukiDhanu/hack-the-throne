@@ -73,7 +73,7 @@ export default function AdminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: auth ? `Bearer ${auth}` : '',
+          ...(auth ? { Authorization: `Bearer ${auth}`, 'x-admin-token': auth } : {}),
         },
         body: JSON.stringify(parsed),
       });

@@ -14,12 +14,19 @@ export async function GET() {
 export async function POST(request: Request) {
   const adminToken = process.env.ADMIN_TOKEN;
   const authHeader = request.headers.get('authorization');
+  const xAdminHeader = request.headers.get('x-admin-token');
+  const { searchParams } = new URL(request.url);
+  const queryToken = searchParams.get('token');
 
   if (!adminToken) {
     return NextResponse.json({ ok: false, error: 'Admin token not configured' }, { status: 500 });
   }
 
-  const token = authHeader?.replace(/Bearer\s+/i, '').trim();
+  const token =
+    authHeader?.replace(/Bearer\s+/i, '').trim() ||
+    xAdminHeader?.trim() ||
+    queryToken?.trim();
+
   if (!token || token !== adminToken) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }

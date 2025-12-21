@@ -39,8 +39,10 @@ export default function RegistrationsPage() {
     setStatus(null);
     const auth = token.trim();
     try {
-      const res = await fetch(`/api/registrations?limit=${limit}`, {
-        headers: auth ? { Authorization: `Bearer ${auth}` } : {},
+      const qs = new URLSearchParams({ limit: String(limit) });
+      if (auth) qs.set('token', auth);
+      const res = await fetch(`/api/registrations?${qs.toString()}`, {
+        headers: auth ? { Authorization: `Bearer ${auth}`, 'x-admin-token': auth } : {},
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to load');
