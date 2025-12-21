@@ -33,6 +33,7 @@ function RegistrationsInner() {
   const [limit, setLimit] = useState(100);
   const [registrations, setRegistrations] = useState<RegistrationPayload[]>([]);
   const [loading, setLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
 
@@ -76,6 +77,33 @@ function RegistrationsInner() {
     if (r.member4Name) count += 1;
     return count;
   };
+
+  async function remove(id: string) {
+    setError(null);
+    setStatus(null);
+    const auth = token.trim();
+    if (!auth) {
+      setError('Admin token required');
+      return;
+    }
+    setDeletingId(id);
+    try {
+      const qs = new URLSearchParams({ id });
+      qs.set('token', auth);
+      const res = await fetch(`/api/registrations?${qs.toString()}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${auth}`, 'x-admin-token': auth },
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to delete');
+      setRegistrations((prev) => prev.filter((r) => r.id !== id));
+      setStatus('Deleted registration');
+    } catch (err: any) {
+      setError(err?.message || 'Error deleting');
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 space-y-6">
@@ -138,6 +166,7 @@ function RegistrationsInner() {
               <th className="px-3 py-2 text-left">Leader</th>
               <th className="px-3 py-2 text-left">Created</th>
               <th className="px-3 py-2 text-left">Members</th>
+              <th className="px-3 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -150,11 +179,21 @@ function RegistrationsInner() {
                 </td>
                 <td className="px-3 py-2 text-slate-400">{new Date(Number(r.createdAt || 0)).toLocaleString()}</td>
                 <td className="px-3 py-2 text-slate-400">{memberCount(r)} members</td>
+                <td className="px-3 py-2">
+                  <button
+                    onClick={() => remove(r.id)}
+                    disabled={deletingId === r.id}
+                    className="rounded-lg border border-red-500/60 px-3 py-1 text-xs font-semibold text-red-200 hover:border-red-400 disabled:opacity-60"
+                    type="button"
+                  >
+                    {deletingId === r.id ? 'Deleting…' : 'Delete'}
+                  </button>
+                </td>
               </tr>
             ))}
             {!latest.length && (
               <tr>
-                <td className="px-3 py-3 text-slate-400" colSpan={4}>No registrations loaded yet.</td>
+                <td className="px-3 py-3 text-slate-400" colSpan={5}>No registrations loaded yet.</td>
               </tr>
             )}
           </tbody>

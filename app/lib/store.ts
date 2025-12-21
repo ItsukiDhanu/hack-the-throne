@@ -138,4 +138,20 @@ export async function listRegistrations(limit = 100): Promise<RegistrationPayloa
   return registrations;
 }
 
+export async function deleteRegistration(id: string): Promise<void> {
+  if (!id) return;
+
+  if (hasKv) {
+    await kv.del(`registration:${id}`);
+    await kv.zrem('registration:index', id);
+    return;
+  }
+
+  const client = await getRedisClient();
+  if (!client) throw new Error('Storage not configured (KV or REDIS_URL missing)');
+
+  await client.del(`registration:${id}`);
+  await client.zRem('registration:index', id);
+}
+
 export type { RegistrationPayload, RegistrationIndexEntry };
