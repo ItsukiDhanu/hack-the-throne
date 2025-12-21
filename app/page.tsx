@@ -17,8 +17,8 @@ const demoContent: Content = {
     { title: 'Venue', body: 'AIT CSE Campus' },
     { title: 'Eligibility', body: '2nd Year CSE students only' },
     { title: 'Tracks', body: 'Mobility · Civic tools · Resilience · Open data' },
-    { title: 'Support', body: 'Food, Wi-Fi, charging, nap pods, wellness room' },
-    { title: 'Team rules', body: 'Teams of 2–5; fresh work only' },
+    { title: 'Support', body: 'Wi-Fi, charging, wellness room' },
+    { title: 'Team rules', body: 'Teams of 4–5; fresh work only' },
     { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
   ],
   schedule: [],
@@ -50,6 +50,7 @@ const demoContent: Content = {
 };
 
 const navLinks = [
+  { href: 'events', label: 'Events' },
   { href: 'about', label: 'Highlights' },
   { href: 'team', label: 'Team' },
   { href: 'faq', label: 'FAQ' },
@@ -155,35 +156,31 @@ export default function Page() {
         <div className="absolute inset-0 bg-hero-radial" />
       </div>
 
-      <header className="sticky top-0 z-30">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(124,140,255,0.16),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(89,192,255,0.14),transparent_30%)]" aria-hidden />
-        <div className="relative border-b border-white/10 bg-base-950/85 shadow-[0_12px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" aria-hidden />
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-            <div className="flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-white shadow-[0_12px_50px_rgba(124,140,255,0.35)]">
-              <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-accent-blue to-accent-secondary shadow-[0_0_0_6px_rgba(124,140,255,0.18)]" />
-              <span className="tracking-wide">Hack The Throne</span>
-              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-primary">AIT CSE</span>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 text-sm text-base-300">
-              {navLinks.map((item) => (
-                <a
-                  key={item.href}
-                  className="rounded-full border border-white/10 bg-white/[0.02] px-3.5 py-2 text-white/80 transition hover:border-accent-blue/40 hover:bg-white/10 hover:text-white shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
-                  href={`#${item.href}`}
-                >
-                  {item.label}
-                </a>
-              ))}
-              <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10 transition hover:shadow-[0_15px_45px_rgba(124,140,255,0.45)]" href="#register">
-                Register
-              </a>
-            </div>
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-black/30 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <a href="#top" className="inline-block">
+              <div className="flex flex-col gap-1">
+                <span className="text-3xl sm:text-4xl font-semibold text-white leading-tight transition-colors hover:text-accent-primary">Hack The Throne</span>
+                <span className="text-sm font-medium text-base-300">Build. Demo. Grow.</span>
+              </div>
+            </a>
           </div>
+          <nav className="flex flex-wrap gap-3 text-sm">
+            {navLinks.map((item) => (
+              <a
+                key={item.href}
+                className="px-2 py-1 text-sm font-medium text-white/80 transition-colors duration-150 hover:text-white"
+                href={`#${item.href}`}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-10 space-y-16">
+      <main className="relative z-10 mx-auto max-w-7xl px-4 pb-16 pt-8 space-y-12">
         {noContent && (
           <div className="glass mb-4 flex items-center gap-3 rounded-2xl px-4 py-3 text-sm text-accent-primary">
             <span className="h-2.5 w-2.5 rounded-full bg-accent-blue" />
@@ -191,7 +188,11 @@ export default function Page() {
           </div>
         )}
 
-        <section id="top" className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <section id="top" className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div
+            className="pointer-events-none absolute inset-y-0 right-[-8%] w-[38%] max-w-xl bg-[radial-gradient(circle_at_30%_30%,rgba(108,161,255,0.18),transparent_55%),radial-gradient(circle_at_70%_50%,rgba(92,225,255,0.12),transparent_52%),radial-gradient(circle_at_50%_80%,rgba(255,122,181,0.12),transparent_48%)] blur-3xl opacity-80"
+            aria-hidden
+          />
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-accent-primary">
               AIT CSE · On-campus · 2nd Year CSE only
@@ -216,16 +217,33 @@ export default function Page() {
                 {noContent ? 'Registration closed' : 'Register now'}
               </a>
             </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {stats.map((s) => (
-                <StatCard key={s.title} title={s.title} value={s.value} caption={s.caption} />
-              ))}
+          </div>
+
+          <div id="events" className="glass relative overflow-hidden rounded-3xl px-6 py-6 shadow-deep">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5" aria-hidden />
+            <div className="relative space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent-primary">Events</p>
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-base-100">Status</span>
+              </div>
+              <div className="rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-6 text-sm text-base-200">
+                <p className="text-base font-semibold text-white">No active events right now.</p>
+                <p className="text-sm text-base-300">We’ll publish the next cohort soon. Check back or join the mailing list.</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10" href="#register">
+                  Get notified
+                </a>
+                <a className="text-sm font-semibold text-accent-primary underline-offset-4 hover:underline leading-none" href="#faq">
+                  View FAQ
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="hackathon" className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="glass rounded-3xl px-6 py-6 shadow-deep">
+        <section id="hackathon" className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-3xl border border-white/5 bg-white/5 px-6 py-5">
             <SectionHeading eyebrow="What is a hackathon?" title="Build, demo, and get feedback fast" description="Two days to form a team, pick a problem, ship a working demo, and present it live." />
             <div className="mt-4 space-y-3 text-base text-base-200">
               {explainerPoints.map((point) => (
@@ -242,9 +260,9 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {galleryImages.slice(0, 2).map((img) => (
-              <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep">
+              <div key={img.src} className="group relative overflow-hidden rounded-3xl bg-base-900/40">
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -264,8 +282,8 @@ export default function Page() {
           </div>
         </section>
 
-        <section id="about" className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="glass rounded-3xl px-6 py-6 shadow-deep">
+        <section id="about" className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-3xl border border-white/5 bg-white/5 px-6 py-5">
             <SectionHeading eyebrow="Why this sprint" title="Designed for fast, confident shipping" description={data.hero.tagline} />
             <div className="mt-4 flex flex-wrap gap-2 text-sm">
               {badges.map((t) => (
@@ -273,16 +291,16 @@ export default function Page() {
               ))}
             </div>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-2.5 md:grid-cols-2">
             {details.slice(0, 4).map((d) => (
               <InfoCard key={d.title} title={d.title} body={d.body} />
             ))}
           </div>
         </section>
 
-        <section id="team" className="space-y-4">
+        <section id="team" className="space-y-3">
           <SectionHeading eyebrow="People" title="Organizers and mentors" description="Fast feedback, crisp prompts, and grounded product guidance." />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {team.length ? (
               team.map((m) => <TeamCard key={m.name} member={m} />)
             ) : (
@@ -291,9 +309,9 @@ export default function Page() {
           </div>
         </section>
 
-        <section id="faq" className="space-y-4">
+        <section id="faq" className="space-y-3">
           <SectionHeading eyebrow="FAQ" title="Details that matter" description="What to bring, who can join, and how we run judging." />
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-2.5 md:grid-cols-2">
             {faqs.length ? (
               faqs.map((item) => <FaqCard key={item.q} item={item} />)
             ) : (
@@ -302,9 +320,9 @@ export default function Page() {
           </div>
         </section>
 
-        <section id="gallery" className="space-y-4">
+        <section id="gallery" className="space-y-3">
           <SectionHeading eyebrow="Vibe" title="Hackathon moments" description="Energy, focus, and demos — here’s what it looks like when teams build together." />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {galleryImages.map((img) => (
               <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep">
                 <Image
@@ -326,8 +344,8 @@ export default function Page() {
           </div>
         </section>
 
-        <section id="register" className="grid gap-6">
-          <div className="glass rounded-3xl px-6 py-6 shadow-deep">
+        <section id="register" className="grid gap-5">
+          <div className="glass rounded-3xl px-6 py-5 shadow-deep">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-semibold text-accent-primary">Apply to join</p>
@@ -337,12 +355,12 @@ export default function Page() {
               <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent-primary">On-site only</span>
             </div>
 
-            <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
+            <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Team Name" name="teamName" placeholder="Your team name" required disabled={noContent} />
               </div>
 
-              <GroupHeading title="Leader (C)" />
+              <GroupHeading title="Leader" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Leader Name" name="leaderName" placeholder="Full name" required disabled={noContent} />
                 <Field label="Section" name="leaderSection" placeholder="Section" required disabled={noContent} />
@@ -353,7 +371,7 @@ export default function Page() {
                 <Field label="Acharya Mail ID" name="leaderEmail" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
               </div>
 
-              <GroupHeading title="Member 1 (C)" />
+              <GroupHeading title="Member 1" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member1Name" placeholder="Full name" required disabled={noContent} />
                 <Field label="Section" name="member1Section" placeholder="Section" required disabled={noContent} />
@@ -364,7 +382,7 @@ export default function Page() {
                 <Field label="Acharya Mail ID" name="member1Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
               </div>
 
-              <GroupHeading title="Member 2 (C)" />
+              <GroupHeading title="Member 2" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member2Name" placeholder="Full name" required disabled={noContent} />
                 <Field label="Section" name="member2Section" placeholder="Section" required disabled={noContent} />
@@ -375,7 +393,7 @@ export default function Page() {
                 <Field label="Acharya Mail ID" name="member2Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
               </div>
 
-              <GroupHeading title="Member 3 (C)" />
+              <GroupHeading title="Member 3" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member3Name" placeholder="Full name" required disabled={noContent} />
                 <Field label="Section" name="member3Section" placeholder="Section" required disabled={noContent} />
@@ -386,7 +404,7 @@ export default function Page() {
                 <Field label="Acharya Mail ID" name="member3Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
               </div>
 
-              <GroupHeading title="Member 4 (optional)" />
+              <GroupHeading title="Member 4" />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member4Name" placeholder="Full name" disabled={noContent} />
                 <Field label="Section" name="member4Section" placeholder="Section" disabled={noContent} />
@@ -461,9 +479,21 @@ function SectionHeading({
   );
 }
 
-function GroupHeading({ title }: { title: string }) {
+function GroupHeading({ title, required }: { title: string; required?: boolean }) {
   return (
-    <p className="text-sm font-semibold text-white/80">{title}</p>
+    <div className="flex items-center gap-2">
+      <p className="text-sm font-semibold text-white/80">{title}</p>
+      <span
+        className={clsx(
+          'rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide',
+          required
+            ? 'border border-accent-primary/40 bg-accent-primary/10 text-accent-primary'
+            : 'border border-white/10 bg-white/5 text-base-300'
+        )}
+      >
+        {required ? 'Required' : 'Optional'}
+      </span>
+    </div>
   );
 }
 
@@ -547,7 +577,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm text-base-100">
-      <span className="mb-2 block font-semibold text-white">{label}</span>
+      <span className="mb-2 block font-semibold text-white">{label}{required ? ' *' : ''}</span>
       <input
         className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none ring-0 transition focus:border-accent-blue"
         name={name}

@@ -9,10 +9,20 @@
 }
 
 body {
-  background: #050814;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(124, 140, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 82% 12%, rgba(92, 225, 255, 0.12), transparent 30%),
+    radial-gradient(circle at 12% 78%, rgba(255, 122, 181, 0.12), transparent 32%),
+    #050814;
+  background-attachment: fixed;
   color: #f5f7ff;
   font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   min-height: 100vh;
+}
+
+::selection {
+  background: rgba(107, 155, 255, 0.28);
+  color: #f5f7ff;
 }
 
 * {
@@ -26,14 +36,15 @@ body {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 88px 88px;
-  opacity: 0.28;
-  mask-image: radial-gradient(circle at 50% 26%, black 0%, transparent 68%);
+  background-size: 72px 72px;
+  opacity: 0.22;
+  mask-image: radial-gradient(circle at 50% 28%, black 0%, transparent 70%);
   z-index: 0;
 }
 
 .glass {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  backdrop-filter: blur(14px) saturate(115%);
 }
