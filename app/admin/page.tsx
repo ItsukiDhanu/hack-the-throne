@@ -16,7 +16,7 @@ const template: Content = {
     { title: 'Tracks', body: 'Urban mobility · Civic tools · Resilience infra · Open data' },
     { title: 'Who', body: 'Developers, designers, PMs, data builders' },
     { title: 'Prizes', body: '$10k cash + partner credits + pilot opportunities' },
-    { title: 'Support', body: 'Food, Wi-Fi, charging, mentors, quiet rooms' },
+    { title: 'Support', body: 'Wi-Fi, charging, mentors on-call, quiet room' },
   ],
   schedule: [
     { time: '8:15 AM', title: 'Check-in', body: 'Badge pickup, breakfast, team tables open.' },
@@ -41,7 +41,7 @@ const template: Content = {
   stats: [
     { title: 'Mentors', value: '15', caption: 'Product · AI/ML · DevOps' },
     { title: 'Tracks', value: '4', caption: 'Mobility · Civic · Resilience · Open data' },
-    { title: 'Support', value: '24/7', caption: 'Food · Wi-Fi · Nap pods' },
+    { title: 'Support', value: '24/7', caption: 'Wi-Fi · Charging · Mentors' },
   ],
   registerNote: 'Seats limited to 20 teams. We will confirm within 48 hours.',
 };

@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 
 export const metadata: Metadata = {
   title: 'Hack The Throne',
-  description: 'Claim the build throne in 36 hours with mentors, data, and nonstop support.',
+  description: 'Explore the Web with Hack The Throne.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -6,12 +6,13 @@ import { useSearchParams } from 'next/navigation';
 
 function toCsv(rows: RegistrationPayload[]) {
   const headers = [
-    'id','createdAt','teamName',
-    'leaderName','leaderSection','leaderYear','leaderUSN','leaderAUID','leaderWhatsapp','leaderEmail',
-    'member1Name','member1Section','member1Year','member1USN','member1AUID','member1Whatsapp','member1Email',
-    'member2Name','member2Section','member2Year','member2USN','member2AUID','member2Whatsapp','member2Email',
-    'member3Name','member3Section','member3Year','member3USN','member3AUID','member3Whatsapp','member3Email',
-    'member4Name','member4Section','member4Year','member4USN','member4AUID','member4Whatsapp','member4Email',
+    'id','createdAt','teamTag','teamName','track','advancedMembers',
+    'leaderName','leaderSection','leaderUSN','leaderWhatsapp','leaderEmail','leaderHackathons',
+    'member1Name','member1Section','member1USN','member1Whatsapp','member1Email','member1Hackathons',
+    'member2Name','member2Section','member2USN','member2Whatsapp','member2Email','member2Hackathons',
+    'member3Name','member3Section','member3USN','member3Whatsapp','member3Email','member3Hackathons',
+    'member4Name','member4Section','member4USN','member4Whatsapp','member4Email','member4Hackathons',
+    'member5Name','member5Section','member5USN','member5Whatsapp','member5Email','member5Hackathons',
   ];
   const escape = (v: unknown) => {
     if (v === undefined || v === null) return '';
@@ -75,6 +76,7 @@ function RegistrationsInner() {
   const memberCount = (r: RegistrationPayload) => {
     let count = 4; // leader + member1-3
     if (r.member4Name) count += 1;
+    if (r.member5Name) count += 1;
     return count;
   };
 
@@ -163,8 +165,11 @@ function RegistrationsInner() {
           <thead className="bg-white/5 text-xs uppercase tracking-wide text-slate-300">
             <tr>
               <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-left">Tag</th>
               <th className="px-3 py-2 text-left">Leader</th>
               <th className="px-3 py-2 text-left">Created</th>
+              <th className="px-3 py-2 text-left">Track</th>
+              <th className="px-3 py-2 text-left">Advanced</th>
               <th className="px-3 py-2 text-left">Members</th>
               <th className="px-3 py-2 text-left">Actions</th>
             </tr>
@@ -173,11 +178,14 @@ function RegistrationsInner() {
             {latest.map((r) => (
               <tr key={r.id} className="border-t border-white/5">
                 <td className="px-3 py-2 font-semibold text-white">{r.teamName}</td>
+                <td className="px-3 py-2 text-slate-200">{r.teamTag || '—'}</td>
                 <td className="px-3 py-2">
                   <div className="font-semibold text-white">{r.leaderName}</div>
                   <div className="text-xs text-slate-400">{r.leaderEmail}</div>
                 </td>
                 <td className="px-3 py-2 text-slate-400">{new Date(Number(r.createdAt || 0)).toLocaleString()}</td>
+                <td className="px-3 py-2 text-slate-200">{r.track || 'Basic'}</td>
+                <td className="px-3 py-2 text-slate-400">{r.advancedMembers ?? 0}</td>
                 <td className="px-3 py-2 text-slate-400">{memberCount(r)} members</td>
                 <td className="px-3 py-2">
                   <button

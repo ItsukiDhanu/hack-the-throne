@@ -50,47 +50,52 @@ export async function writeContent(content: Content): Promise<void> {
 type RegistrationPayload = {
   id: string;
   createdAt: number;
+  teamTag: string;
+  track: 'Basic' | 'Advanced';
+  advancedMembers: number;
   teamName: string;
 
   leaderName: string;
   leaderSection: string;
-  leaderYear: string;
   leaderUSN: string;
-  leaderAUID: string;
   leaderWhatsapp: string;
   leaderEmail: string;
+  leaderHackathons: string;
 
   member1Name: string;
   member1Section: string;
-  member1Year: string;
   member1USN: string;
-  member1AUID: string;
   member1Whatsapp: string;
   member1Email: string;
+  member1Hackathons: string;
 
   member2Name: string;
   member2Section: string;
-  member2Year: string;
   member2USN: string;
-  member2AUID: string;
   member2Whatsapp: string;
   member2Email: string;
+  member2Hackathons: string;
 
   member3Name: string;
   member3Section: string;
-  member3Year: string;
   member3USN: string;
-  member3AUID: string;
   member3Whatsapp: string;
   member3Email: string;
+  member3Hackathons: string;
 
   member4Name?: string;
   member4Section?: string;
-  member4Year?: string;
   member4USN?: string;
-  member4AUID?: string;
   member4Whatsapp?: string;
   member4Email?: string;
+  member4Hackathons?: string;
+
+  member5Name?: string;
+  member5Section?: string;
+  member5USN?: string;
+  member5Whatsapp?: string;
+  member5Email?: string;
+  member5Hackathons?: string;
 };
 
 type RegistrationIndexEntry = { id: string; createdAt: number };
@@ -111,6 +116,21 @@ export async function saveRegistration(data: RegistrationPayload): Promise<void>
 
   await client.hSet(`registration:${data.id}`, filtered);
   await client.zAdd('registration:index', { score: data.createdAt, value: data.id });
+}
+
+export async function countRegistrations(): Promise<number> {
+  if (hasKv) {
+    try {
+      return await kv.zcard('registration:index');
+    } catch (err) {
+      console.error('KV countRegistrations error', err);
+      return 0;
+    }
+  }
+
+  const client = await getRedisClient();
+  if (!client) throw new Error('Storage not configured (KV or REDIS_URL missing)');
+  return client.zCard('registration:index');
 }
 
 export async function listRegistrations(limit = 100): Promise<RegistrationPayload[]> {
@@ -152,6 +172,30 @@ export async function deleteRegistration(id: string): Promise<void> {
 
   await client.del(`registration:${id}`);
   await client.zRem('registration:index', id);
+}
+
+export async function teamNameExists(name: string): Promise<boolean> {
+  const target = name.trim().toLowerCase();
+  if (!target) return false;
+
+  if (hasKv) {
+    const ids = await kv.zrange('registration:index', 0, -1);
+    for (const id of ids) {
+      const teamName = await kv.hget<string>(`registration:${id}`, 'teamName');
+      if (typeof teamName === 'string' && teamName.trim().toLowerCase() === target) return true;
+    }
+    return false;
+  }
+
+  const client = await getRedisClient();
+  if (!client) throw new Error('Storage not configured (KV or REDIS_URL missing)');
+
+  const ids = await client.zRange('registration:index', 0, -1, { REV: false });
+  for (const id of ids) {
+    const teamName = await client.hGet(`registration:${id}`, 'teamName');
+    if (teamName && teamName.trim().toLowerCase() === target) return true;
+  }
+  return false;
 }
 
 export type { RegistrationPayload, RegistrationIndexEntry };

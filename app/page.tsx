@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, type ComponentProps } from 'react';
 import { clsx } from 'clsx';
 import type { Content } from './lib/content';
 
@@ -10,15 +10,14 @@ type FormState = 'idle' | 'submitting' | 'success' | 'error';
 const demoContent: Content = {
   hero: {
     title: 'Hack The Throne',
-    tagline: 'Build together at AIT CSE. Open only to 2nd Year CSE students.',
-    badges: ['AIT CSE campus', 'On-campus', '2nd Year CSE only', 'Mentors on-call'],
+    tagline: 'Explore the Web',
+    badges: ['AIT CSE campus', 'On-campus', '2ⁿᵈ Year CSE only', 'Mentors on-call'],
   },
   details: [
     { title: 'Venue', body: 'AIT CSE Campus' },
-    { title: 'Eligibility', body: '2nd Year CSE students only' },
+    { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
     { title: 'Tracks', body: 'Mobility · Civic tools · Resilience · Open data' },
-    { title: 'Support', body: 'Wi-Fi, charging, wellness room' },
-    { title: 'Team rules', body: 'Teams of 4–5; fresh work only' },
+    { title: 'Team rules', body: 'Teams of 4–6; fresh work only' },
     { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
   ],
   schedule: [],
@@ -42,11 +41,11 @@ const demoContent: Content = {
     { q: 'Benefits of participating?', a: 'Portfolio-worthy builds, networking, prizes, recruiter visibility, and learning under pressure.' },
   ],
   stats: [
-    { title: 'Eligibility', value: '2nd Year CSE', caption: 'AIT Department of CSE' },
+    { title: 'Eligibility', value: '2ⁿᵈ Year CSE', caption: 'AIT Department of CSE' },
     { title: 'Mode', value: 'On-campus', caption: 'AIT CSE Campus' },
     { title: 'Support', value: 'Mentors', caption: 'Product · AI/ML · DevOps' },
   ],
-  registerNote: 'Open only to 2nd Year CSE students. Confirm your details to request a slot.',
+  registerNote: 'Open only to 2ⁿᵈ Year CSE students. Confirm your details to request a slot.',
 };
 
 const navLinks = [
@@ -107,7 +106,10 @@ export default function Page() {
   const data = content ?? demoContent;
   const stats = data.stats ?? demoContent.stats!;
   const faqs = useMemo(() => data.faqs || [], [data]);
-  const details = useMemo(() => data.details || [], [data]);
+  const details = useMemo(
+    () => (data.details || []).filter((d) => d?.title?.toLowerCase() !== 'support'),
+    [data]
+  );
   const team = useMemo(() => data.team || [], [data]);
   const badges = (data.hero.badges || []).length ? data.hero.badges : demoContent.hero.badges;
 
@@ -162,7 +164,7 @@ export default function Page() {
             <a href="#top" className="inline-block">
               <div className="flex flex-col gap-1">
                 <span className="text-3xl sm:text-4xl font-semibold text-white leading-tight transition-colors hover:text-accent-primary">Hack The Throne</span>
-                <span className="text-sm font-medium text-base-300">Build. Demo. Grow.</span>
+                  <span className="text-sm font-medium text-base-300">Explore the Web</span>
               </div>
             </a>
           </div>
@@ -195,7 +197,7 @@ export default function Page() {
           />
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-accent-primary">
-              AIT CSE · On-campus · 2nd Year CSE only
+              AIT CSE · On-campus · 2ⁿᵈ Year CSE only
             </div>
             <div className="space-y-3">
               <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">{data.hero.title}</h1>
@@ -300,7 +302,7 @@ export default function Page() {
 
         <section id="team" className="space-y-3">
           <SectionHeading eyebrow="People" title="Organizers and mentors" description="Fast feedback, crisp prompts, and grounded product guidance." />
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
             {team.length ? (
               team.map((m) => <TeamCard key={m.name} member={m} />)
             ) : (
@@ -363,56 +365,61 @@ export default function Page() {
               <GroupHeading title="Leader" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Leader Name" name="leaderName" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="leaderSection" placeholder="Section" required disabled={noContent} />
-                <Field label="Year" name="leaderYear" placeholder="Year" required disabled={noContent} />
-                <Field label="USN" name="leaderUSN" placeholder="USN" required disabled={noContent} />
-                <Field label="AUID" name="leaderAUID" placeholder="AUID" required disabled={noContent} />
-                <Field label="WhatsApp Number" name="leaderWhatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
-                <Field label="Acharya Mail ID" name="leaderEmail" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+                <Field label="Section" name="leaderSection" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
+                <Field label="USN" name="leaderUSN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
+                <Field label="WhatsApp Number" name="leaderWhatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
+                <Field label="Acharya Mail ID" name="leaderEmail" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
+                <Field label="Hackathons attended before" name="leaderHackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 1" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member1Name" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="member1Section" placeholder="Section" required disabled={noContent} />
-                <Field label="Year" name="member1Year" placeholder="Year" required disabled={noContent} />
-                <Field label="USN" name="member1USN" placeholder="USN" required disabled={noContent} />
-                <Field label="AUID" name="member1AUID" placeholder="AUID" required disabled={noContent} />
-                <Field label="WhatsApp Number" name="member1Whatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
-                <Field label="Acharya Mail ID" name="member1Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+                <Field label="Section" name="member1Section" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
+                <Field label="USN" name="member1USN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
+                <Field label="WhatsApp Number" name="member1Whatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
+                <Field label="Acharya Mail ID" name="member1Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
+                <Field label="Hackathons attended before" name="member1Hackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 2" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member2Name" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="member2Section" placeholder="Section" required disabled={noContent} />
-                <Field label="Year" name="member2Year" placeholder="Year" required disabled={noContent} />
-                <Field label="USN" name="member2USN" placeholder="USN" required disabled={noContent} />
-                <Field label="AUID" name="member2AUID" placeholder="AUID" required disabled={noContent} />
-                <Field label="WhatsApp Number" name="member2Whatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
-                <Field label="Acharya Mail ID" name="member2Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+                <Field label="Section" name="member2Section" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
+                <Field label="USN" name="member2USN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
+                <Field label="WhatsApp Number" name="member2Whatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
+                <Field label="Acharya Mail ID" name="member2Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
+                <Field label="Hackathons attended before" name="member2Hackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 3" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member3Name" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="member3Section" placeholder="Section" required disabled={noContent} />
-                <Field label="Year" name="member3Year" placeholder="Year" required disabled={noContent} />
-                <Field label="USN" name="member3USN" placeholder="USN" required disabled={noContent} />
-                <Field label="AUID" name="member3AUID" placeholder="AUID" required disabled={noContent} />
-                <Field label="WhatsApp Number" name="member3Whatsapp" type="tel" placeholder="Contact number" required disabled={noContent} />
-                <Field label="Acharya Mail ID" name="member3Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} />
+                <Field label="Section" name="member3Section" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
+                <Field label="USN" name="member3USN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
+                <Field label="WhatsApp Number" name="member3Whatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
+                <Field label="Acharya Mail ID" name="member3Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
+                <Field label="Hackathons attended before" name="member3Hackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 4" />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member4Name" placeholder="Full name" disabled={noContent} />
-                <Field label="Section" name="member4Section" placeholder="Section" disabled={noContent} />
-                <Field label="Year" name="member4Year" placeholder="Year" disabled={noContent} />
-                <Field label="USN" name="member4USN" placeholder="USN" disabled={noContent} />
-                <Field label="AUID" name="member4AUID" placeholder="AUID" disabled={noContent} />
-                <Field label="WhatsApp Number" name="member4Whatsapp" type="tel" placeholder="Contact number" disabled={noContent} />
-                <Field label="Acharya Mail ID" name="member4Email" type="email" placeholder="name@acharya.ac.in" disabled={noContent} />
+                <Field label="Section" name="member4Section" placeholder="Section (A/B/C/D)" disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
+                <Field label="USN" name="member4USN" placeholder="USN" disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
+                <Field label="WhatsApp Number" name="member4Whatsapp" type="tel" placeholder="WhatsApp number" disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
+                <Field label="Acharya Mail ID" name="member4Email" type="email" placeholder="name@acharya.ac.in" disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
+                <Field label="Hackathons attended before" name="member4Hackathons" type="number" placeholder="0" disabled={noContent} />
+              </div>
+
+              <GroupHeading title="Member 5" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="Name" name="member5Name" placeholder="Full name" disabled={noContent} />
+                <Field label="Section" name="member5Section" placeholder="Section (A/B/C/D)" disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
+                <Field label="USN" name="member5USN" placeholder="USN" disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
+                <Field label="WhatsApp Number" name="member5Whatsapp" type="tel" placeholder="WhatsApp number" disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
+                <Field label="Acharya Mail ID" name="member5Email" type="email" placeholder="name@acharya.ac.in" disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
+                <Field label="Hackathons attended before" name="member5Hackathons" type="number" placeholder="0" disabled={noContent} />
               </div>
 
               {error && <p className="text-sm text-red-400">{error}</p>}
@@ -567,6 +574,9 @@ function Field({
   placeholder,
   required,
   disabled,
+  pattern,
+  maxLength,
+  inputMode,
 }: {
   label: string;
   name: string;
@@ -574,6 +584,9 @@ function Field({
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  pattern?: string;
+  maxLength?: number;
+  inputMode?: ComponentProps<'input'>['inputMode'];
 }) {
   return (
     <label className="block text-sm text-base-100">
@@ -585,6 +598,9 @@ function Field({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
+        pattern={pattern}
+        maxLength={maxLength}
+        inputMode={inputMode}
       />
     </label>
   );

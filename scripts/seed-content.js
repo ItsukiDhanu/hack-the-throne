@@ -14,15 +14,15 @@ async function main() {
   const content = {
     hero: {
       title: 'Hack The Throne',
-      tagline: 'Build together at AIT CSE. Open only to 2nd Year CSE students.',
-      badges: ['AIT CSE campus', 'On-campus', '2nd Year CSE only', 'Mentors on-call'],
+      tagline: 'Build together at AIT CSE. Open only to 2ⁿᵈ Year CSE students.',
+      badges: ['AIT CSE campus', 'On-campus', '2ⁿᵈ Year CSE only', 'Mentors on-call'],
     },
     details: [
       { title: 'Venue', body: 'AIT CSE Campus' },
-      { title: 'Eligibility', body: '2nd Year CSE students only' },
+      { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
       { title: 'Tracks', body: 'Mobility · Civic tools · Resilience · Open data' },
-      { title: 'Support', body: 'Food, Wi-Fi, charging, nap pods, wellness room' },
-      { title: 'Team rules', body: 'Teams of 2–5; fresh work only' },
+      { title: 'Support', body: 'Wi-Fi, charging, mentors on-call, quiet room' },
+      { title: 'Team rules', body: 'Teams of 4–6; fresh work only' },
       { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
     ],
     schedule: [],
@@ -46,11 +46,11 @@ async function main() {
       { q: 'Benefits of participating?', a: 'Portfolio-worthy builds, networking, prizes, recruiter visibility, and learning under pressure.' },
     ],
     stats: [
-      { title: 'Eligibility', value: '2nd Year CSE', caption: 'AIT Department of CSE' },
+      { title: 'Eligibility', value: '2ⁿᵈ Year CSE', caption: 'AIT Department of CSE' },
       { title: 'Mode', value: 'On-campus', caption: 'AIT CSE Campus' },
       { title: 'Support', value: 'Mentors', caption: 'Product · AI/ML · DevOps' },
     ],
-    registerNote: 'Open only to 2nd Year CSE students. Confirm your details for review.',
+    registerNote: 'Open only to 2ⁿᵈ Year CSE students. Confirm your details for review.',
   };
 
   await client.set('content:current', JSON.stringify(content));
