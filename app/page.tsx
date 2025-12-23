@@ -16,9 +16,9 @@ const demoContent: Content = {
   details: [
     { title: 'Venue', body: 'AIT CSE Campus' },
     { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
-    { title: 'Tracks', body: 'Mobility · Civic tools · Resilience · Open data' },
-    { title: 'Team rules', body: 'Teams of 4–6; fresh work only' },
-    { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
+    { title: 'Tracks', body: 'Mobility · Civic tools\nResilience · Open data' },
+    { title: 'Team rules', body: 'Teams of 4–6\nFresh work only' },
+
   ],
   schedule: [],
   team: [
@@ -211,7 +211,7 @@ export default function Page() {
             <div className="flex flex-wrap gap-3">
               <a
                 className={clsx(
-                  'rounded-2xl bg-gradient-to-r from-accent-blue to-accent-secondary px-5 py-3 text-base font-semibold text-base-950 shadow-lg shadow-glow',
+                  'rounded-2xl bg-gradient-to-r from-accent-blue to-accent-secondary px-5 py-3 text-base font-semibold text-base-950 shadow-lg shadow-glow btn-animated cta-glow',
                   noContent && 'opacity-60 pointer-events-none'
                 )}
                 href="#register"
@@ -233,7 +233,7 @@ export default function Page() {
                 <p className="text-sm text-base-300">We’ll publish the next cohort soon. Check back or join the mailing list.</p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10" href="#register">
+                <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10 btn-animated cta-glow" href="#register">
                   Get notified
                 </a>
                 <a className="text-sm font-semibold text-accent-primary underline-offset-4 hover:underline leading-none" href="#faq">
@@ -256,7 +256,7 @@ export default function Page() {
               ))}
             </div>
             <div className="mt-5 flex flex-wrap gap-3">
-              <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10" href="#register">
+              <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10 btn-animated cta-glow" href="#register">
                 Join the sprint
               </a>
             </div>
@@ -264,7 +264,7 @@ export default function Page() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             {galleryImages.slice(0, 2).map((img) => (
-              <div key={img.src} className="group relative overflow-hidden rounded-3xl bg-base-900/40">
+              <div key={img.src} className="group relative overflow-hidden rounded-3xl bg-base-900/40 float-card">
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -326,7 +326,7 @@ export default function Page() {
           <SectionHeading eyebrow="Vibe" title="Hackathon moments" description="Energy, focus, and demos — here’s what it looks like when teams build together." />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {galleryImages.map((img) => (
-              <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep">
+              <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep float-card">
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -424,16 +424,17 @@ export default function Page() {
 
               {error && <p className="text-sm text-red-400">{error}</p>}
               <div className="flex flex-wrap items-center gap-3">
+                <p className="text-sm font-semibold italic text-red-300 drop-shadow">Just One Question : Are You Ready to Claim The Throne ??...</p>
                 <button
                   className={clsx(
-                    'rounded-2xl px-5 py-3 text-base font-semibold shadow-lg shadow-glow',
+                    'rounded-2xl px-5 py-3 text-base font-semibold shadow-lg shadow-glow btn-animated cta-glow',
                     'bg-gradient-to-r from-accent-blue to-accent-secondary text-base-950',
                     (formState === 'submitting' || noContent) && 'opacity-80'
                   )}
                   type="submit"
                   disabled={formState === 'submitting' || noContent}
                 >
-                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'Submit registration'}
+                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'Yes ( Submit)'}
                 </button>
                 {formState === 'success' && (
                   <span className="rounded-2xl bg-accent-primary/10 px-3 py-2 text-sm font-semibold text-accent-primary">Thanks! We received your registration.</span>
@@ -457,9 +458,9 @@ export default function Page() {
           <div>
             <p className="font-semibold text-white">Social</p>
             <div className="flex gap-2">
-              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue" href="#">Twitter</a>
-              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue" href="#">LinkedIn</a>
-              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue" href="#">Instagram</a>
+              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue btn-outline-animated" href="#">Twitter</a>
+              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue btn-outline-animated" href="#">LinkedIn</a>
+              <a className="rounded-lg border border-white/10 px-3 py-2 text-white hover:border-accent-blue btn-outline-animated" href="#">Instagram</a>
             </div>
           </div>
         </div>
@@ -508,7 +509,7 @@ function Pill({ label, subtle }: { label: string; subtle?: boolean }) {
   return (
     <span
       className={clsx(
-        'rounded-full px-3 py-1 text-xs font-semibold',
+        'rounded-full px-3 py-1 text-xs font-semibold pill-float',
         subtle
           ? 'border border-white/10 bg-white/5 text-base-200'
           : 'border border-white/10 bg-white/10 text-accent-primary shadow-[0_10px_40px_rgba(124,140,255,0.18)]'
@@ -533,19 +534,19 @@ function InfoCard({ title, body, subtle }: { title: string; body: string; subtle
   return (
     <div
       className={clsx(
-        'rounded-2xl border border-white/5 p-4 shadow-card',
+        'rounded-2xl border border-white/5 p-4 shadow-card float-card',
         subtle ? 'bg-white/5' : 'glass'
       )}
     >
       <p className="text-lg font-semibold text-white">{title}</p>
-      <p className="text-sm text-base-300">{body}</p>
+      <p className="text-sm text-base-300 whitespace-pre-line">{body}</p>
     </div>
   );
 }
 
 function TeamCard({ member }: { member: { name: string; role: string } }) {
   return (
-    <div className="glass rounded-2xl p-4 shadow-card">
+    <div className="glass rounded-2xl p-4 shadow-card float-card">
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent-blue to-accent-secondary text-base font-bold text-base-950">
         {member.name
           .split(' ')
@@ -592,7 +593,7 @@ function Field({
     <label className="block text-sm text-base-100">
       <span className="mb-2 block font-semibold text-white">{label}{required ? ' *' : ''}</span>
       <input
-        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none ring-0 transition focus:border-accent-blue"
+        className="w-full rounded-xl glossy-input px-4 py-3 text-white outline-none ring-0 transition focus:border-accent-blue focus-glow"
         name={name}
         type={type}
         placeholder={placeholder}

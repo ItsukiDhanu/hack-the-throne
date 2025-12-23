@@ -20,9 +20,9 @@ async function main() {
     details: [
       { title: 'Venue', body: 'AIT CSE Campus' },
       { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
-      { title: 'Tracks', body: 'Mobility · Civic tools · Resilience · Open data' },
+      { title: 'Tracks', body: 'Mobility · Civic tools\nResilience · Open data' },
       { title: 'Support', body: 'Wi-Fi, charging, mentors on-call, quiet room' },
-      { title: 'Team rules', body: 'Teams of 4–6; fresh work only' },
+      { title: 'Team rules', body: 'Teams of 4–6\nFresh work only' },
       { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
     ],
     schedule: [],

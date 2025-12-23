@@ -13,7 +13,7 @@ const template: Content = {
   details: [
     { title: 'Date & Time', body: 'January 24–25, 2025 · Starts 9:00 AM' },
     { title: 'Venue', body: 'Innovation Hub, Hall B · Atlantis Tech Park' },
-    { title: 'Tracks', body: 'Urban mobility · Civic tools · Resilience infra · Open data' },
+    { title: 'Tracks', body: 'Urban mobility · Civic tools\nResilience infra · Open data' },
     { title: 'Who', body: 'Developers, designers, PMs, data builders' },
     { title: 'Prizes', body: '$10k cash + partner credits + pilot opportunities' },
     { title: 'Support', body: 'Wi-Fi, charging, mentors on-call, quiet room' },

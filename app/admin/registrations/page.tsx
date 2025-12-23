@@ -122,7 +122,7 @@ function RegistrationsInner() {
             type="password"
             value={token}
             onChange={(e) => setToken(e.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white"
+            className="rounded-lg glossy-input px-3 py-2 text-white"
             placeholder="Bearer token"
           />
         </label>
@@ -134,14 +134,14 @@ function RegistrationsInner() {
             max={500}
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value) || 1)}
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white"
+            className="rounded-lg glossy-input px-3 py-2 text-white"
           />
         </label>
         <div className="flex items-end gap-3">
           <button
             onClick={load}
             disabled={loading}
-            className="rounded-lg bg-gradient-to-r from-accent-blue to-accent-secondary px-4 py-2 font-semibold text-base-950 shadow-lg shadow-glow disabled:opacity-60"
+            className="rounded-lg bg-gradient-to-r from-accent-blue to-accent-secondary px-4 py-2 font-semibold text-base-950 shadow-lg shadow-glow btn-animated disabled:opacity-60"
             type="button"
           >
             {loading ? 'Loading…' : 'Load'}
@@ -149,7 +149,7 @@ function RegistrationsInner() {
           <button
             onClick={downloadCsv}
             disabled={!registrations.length}
-            className="rounded-lg border border-white/10 px-4 py-2 font-semibold text-white hover:border-accent-blue disabled:opacity-60"
+            className="rounded-lg border border-white/10 px-4 py-2 font-semibold text-white hover:border-accent-blue btn-outline-animated disabled:opacity-60"
             type="button"
           >
             Download CSV
@@ -191,7 +191,7 @@ function RegistrationsInner() {
                   <button
                     onClick={() => remove(r.id)}
                     disabled={deletingId === r.id}
-                    className="rounded-lg border border-red-500/60 px-3 py-1 text-xs font-semibold text-red-200 hover:border-red-400 disabled:opacity-60"
+                    className="rounded-lg border border-red-500/60 px-3 py-1 text-xs font-semibold text-red-200 hover:border-red-400 btn-outline-animated disabled:opacity-60"
                     type="button"
                   >
                     {deletingId === r.id ? 'Deleting…' : 'Delete'}
