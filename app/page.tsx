@@ -103,6 +103,54 @@ export default function Page() {
     load();
   }, []);
 
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const root = document.documentElement;
+    const body = document.body;
+    let targetX = window.innerWidth * 0.5;
+    let targetY = window.innerHeight * 0.5;
+    let currentX = targetX;
+    let currentY = targetY;
+    let raf = 0;
+
+    const update = () => {
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+      root.style.setProperty('--spot-x', `${currentX}px`);
+      root.style.setProperty('--spot-y', `${currentY}px`);
+      raf = requestAnimationFrame(update);
+    };
+
+    const handleMove = (event: PointerEvent) => {
+      targetX = event.clientX;
+      targetY = event.clientY;
+      body.classList.add('spotlight-active');
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    const handleLeave = () => {
+      body.classList.remove('spotlight-active');
+      targetX = window.innerWidth * 0.5;
+      targetY = window.innerHeight * 0.5;
+    };
+
+    raf = requestAnimationFrame(update);
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerenter', handleMove);
+    window.addEventListener('pointerleave', handleLeave);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerenter', handleMove);
+      window.removeEventListener('pointerleave', handleLeave);
+      body.classList.remove('spotlight-active');
+    };
+  }, []);
+
   const data = content ?? demoContent;
   const stats = data.stats ?? demoContent.stats!;
   const faqs = useMemo(() => data.faqs || [], [data]);
@@ -158,7 +206,21 @@ export default function Page() {
         <div className="absolute inset-0 bg-hero-radial" />
       </div>
 
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-black/30 backdrop-blur">
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <div className="aurora-layer" />
+        <div className="soft-rings" />
+        <div className="cloud-bloom one" />
+        <div className="cloud-bloom two" />
+        <div className="cloud-bloom three" />
+        <div className="line-glow" />
+        <div className="grain-overlay" />
+      </div>
+
+      <div className="pointer-events-none fixed inset-0 z-[5] mix-blend-screen" aria-hidden>
+        <div className="cursor-spotlight" />
+      </div>
+
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-white/10 backdrop-blur-xl shadow-[0_12px_60px_rgba(0,0,0,0.45)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <a href="#top" className="inline-block">
@@ -199,10 +261,10 @@ export default function Page() {
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-accent-primary">
               AIT CSE · On-campus · 2ⁿᵈ Year CSE only
             </div>
-            <div className="space-y-3">
-              <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">{data.hero.title}</h1>
-              <p className="max-w-2xl text-lg text-base-300">{data.hero.tagline}</p>
-            </div>
+              <div className="space-y-3">
+                <h1 className="hero-title-animate text-4xl sm:text-5xl md:text-6xl leading-tight">{data.hero.title}</h1>
+                <p className="max-w-2xl text-lg text-base-200">{data.hero.tagline}</p>
+              </div>
             <div className="flex flex-wrap gap-3 text-sm text-base-100">
               {badges.map((b) => (
                 <Pill key={b} label={b} />
