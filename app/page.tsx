@@ -87,7 +87,6 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<Content | null>(null);
   const [loadingContent, setLoadingContent] = useState(true);
-  const [enableSpotlight, setEnableSpotlight] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -103,11 +102,6 @@ export default function Page() {
       }
     }
     load();
-  }, []);
-
-  // Spotlight effect fully disabled to reduce GPU/CPU/RAM usage.
-  useEffect(() => {
-    setEnableSpotlight(false);
   }, []);
 
   const data = content ?? demoContent;

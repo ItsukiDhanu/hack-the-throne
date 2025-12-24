@@ -123,6 +123,12 @@ body {
   }
 }
 
+@media (max-width: 1024px) {
+  .float-card {
+    animation: none;
+  }
+}
+
 .cursor-spotlight {
   position: fixed;
   inset: -16% -8%;
