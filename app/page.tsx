@@ -5,49 +5,9 @@ import { FormEvent, useEffect, useMemo, useState, type ComponentProps } from 're
 import { clsx } from 'clsx';
 import HttWhiteLogo from '../HTT White Logo (1).png';
 import type { Content } from './lib/content';
+import { defaultContent } from './lib/defaultContent';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
-
-const demoContent: Content = {
-  hero: {
-    title: 'Hack The Throne',
-    tagline: 'Explore the Web',
-    badges: ['AIT CSE campus', 'On-campus', '2ⁿᵈ Year CSE only', 'Mentors on-call'],
-  },
-  details: [
-    { title: 'Venue', body: 'AIT CSE Campus' },
-    { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
-    { title: 'Tracks', body: 'Basic · Advanced' },
-    { title: 'Team rules', body: 'Teams of 4–6\nFresh work only' },
-
-  ],
-  schedule: [],
-  team: [
-    { name: 'Ayush Kaushik', role: 'Lead Organizer' },
-    { name: 'Ethan Dsouza', role: 'Tech Lead (Co-Organizer)' },
-    { name: 'Ayush Mallick', role: 'Logistics & Marketing Lead' },
-    { name: 'Dhanush V P', role: 'Tech & Organizing Coordinator' },
-    { name: 'Abhay Emmanuel', role: 'Tech & Organizing Coordinator' },
-  ],
-  faqs: [
-    { q: "What's a hackathon?", a: 'A fast-paced event where teams build and demo solutions in a short time (often 24–48 hours).' },
-    { q: 'What do we do there?', a: 'Form teams, pick a problem, design, code, ship a demo, and present to judges.' },
-    { q: 'Types of hackathons?', a: 'Thematic (health, civic), open innovation, AI/ML, hardware, and product design sprints.' },
-    { q: 'Prerequisite skills?', a: 'Basics help: coding or no-code, Git, slides/storytelling, and collaboration. Mixed skills win.' },
-    { q: 'Use of AI?', a: 'AI accelerates ideation, coding, testing, and content; cite sources and keep outputs transparent.' },
-    { q: 'Phases of a hackathon?', a: 'Ideation → build → push to Git/GitHub → polish demo → present with a clear deck.' },
-    { q: 'How to achieve good projects?', a: 'Scope tightly, pick one painful user problem, ship a working core, and demo clearly.' },
-    { q: 'How to win?', a: 'Solve a real pain, show working product, clear story, impact, and next steps. Rehearse your demo.' },
-    { q: "Is it just coding?", a: 'No. Product thinking, design, storytelling, and teamwork matter as much as code.' },
-    { q: 'Benefits of participating?', a: 'Portfolio-worthy builds, networking, prizes, recruiter visibility, and learning under pressure.' },
-  ],
-  stats: [
-    { title: 'Eligibility', value: '2ⁿᵈ Year CSE', caption: 'AIT Department of CSE' },
-    { title: 'Mode', value: 'On-campus', caption: 'AIT CSE Campus' },
-    { title: 'Support', value: 'Mentors', caption: 'Product · AI/ML · DevOps' },
-  ],
-  registerNote: 'Open only to 2ⁿᵈ Year CSE students. Confirm your details to request a slot.',
-};
 
 const navLinks = [
   { href: 'events', label: 'Events' },
@@ -104,15 +64,15 @@ export default function Page() {
     load();
   }, []);
 
-  const data = content ?? demoContent;
-  const stats = data.stats ?? demoContent.stats!;
+  const data = content ?? defaultContent;
+  const stats = data.stats ?? defaultContent.stats!;
   const faqs = useMemo(() => data.faqs || [], [data]);
   const details = useMemo(
     () => (data.details || []).filter((d) => d?.title?.toLowerCase() !== 'support'),
     [data]
   );
   const team = useMemo(() => data.team || [], [data]);
-  const badges = (data.hero.badges || []).length ? data.hero.badges : demoContent.hero.badges;
+  const badges = (data.hero.badges || []).length ? data.hero.badges : defaultContent.hero.badges;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -283,7 +243,10 @@ export default function Page() {
 
           <div className="grid gap-3 sm:grid-cols-2">
             {galleryImages.slice(0, 2).map((img) => (
-              <div key={img.src} className="group relative overflow-hidden rounded-3xl bg-base-900/40 float-card">
+              <div
+                key={img.src}
+                className="group relative overflow-hidden rounded-3xl bg-base-900/40 float-card shadow-lg shadow-base-900/40 transition-transform duration-500 hover:-translate-y-1 hover:shadow-base-900/60"
+              >
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -293,11 +256,6 @@ export default function Page() {
                   className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-base-950/80 via-base-950/30 to-transparent" aria-hidden />
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <p className="text-sm font-semibold text-white">{img.caption}</p>
-                  <p className="text-xs text-base-200">{img.alt}</p>
-                </div>
               </div>
             ))}
           </div>
@@ -345,7 +303,10 @@ export default function Page() {
           <SectionHeading eyebrow="Vibe" title="Hackathon moments" description="Energy, focus, and demos — here’s what it looks like when teams build together." />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {galleryImages.map((img) => (
-              <div key={img.src} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep float-card">
+              <div
+                key={img.src}
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-deep float-card transition-transform duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-base-900/50"
+              >
                 <Image
                   src={img.src}
                   alt={img.alt}
@@ -355,11 +316,6 @@ export default function Page() {
                   className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-base-950/85 via-base-950/40 to-transparent" aria-hidden />
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <p className="text-sm font-semibold text-white">{img.caption}</p>
-                  <p className="text-xs text-base-200">{img.alt}</p>
-                </div>
               </div>
             ))}
           </div>

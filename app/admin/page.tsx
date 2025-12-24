@@ -3,48 +3,9 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Content, ContentSchema } from '../lib/content';
+import { defaultContent } from '../lib/defaultContent';
 
-const template: Content = {
-  hero: {
-    title: 'Pulse Hackathon 2025',
-    tagline: 'Build resilient, intelligent solutions that move communities forward.',
-    badges: ['Jan 24–25, 2025', 'Innovation Hub · Hall B', '20 teams', '$10k prizes'],
-  },
-  details: [
-    { title: 'Date & Time', body: 'January 24–25, 2025 · Starts 9:00 AM' },
-    { title: 'Venue', body: 'Innovation Hub, Hall B · Atlantis Tech Park' },
-    { title: 'Tracks', body: 'Urban mobility · Civic tools\nResilience infra · Open data' },
-    { title: 'Who', body: 'Developers, designers, PMs, data builders' },
-    { title: 'Prizes', body: '$10k cash + partner credits + pilot opportunities' },
-    { title: 'Support', body: 'Wi-Fi, charging, mentors on-call, quiet room' },
-  ],
-  schedule: [
-    { time: '8:15 AM', title: 'Check-in', body: 'Badge pickup, breakfast, team tables open.' },
-    { time: '9:00 AM', title: 'Kickoff', body: 'Keynote + challenge drop; sponsor APIs and datasets.' },
-    { time: '10:00 AM', title: 'Sprint', body: 'Mentor office hours rolling; hardware + data sandbox live.' },
-    { time: '7:00 PM', title: 'Health check', body: 'Progress reviews to unblock teams.' },
-    { time: '10:00 AM', title: 'Submission', body: 'Code freeze, deck upload, demo order announced.' },
-    { time: '11:00 AM', title: 'Demos', body: '5 min pitch + live QA.' },
-  ],
-  team: [
-    { name: 'Avery Lane', role: 'Lead Organizer' },
-    { name: 'Jordan Malik', role: 'Engineering Lead' },
-    { name: 'Casey Sun', role: 'Design Lead' },
-    { name: 'Taylor Reed', role: 'Operations' },
-  ],
-  faqs: [
-    { q: 'Who can join?', a: 'Developers, designers, PMs, data folks. Teams of 2–5.' },
-    { q: 'Do we need an idea now?', a: 'No. We share prompts and data on-site; bring your own if it fits the theme.' },
-    { q: 'What should we bring?', a: 'Laptop, chargers, ID, and any hardware. We provide power, internet, snacks, and coffee nonstop.' },
-    { q: 'Do you support beginners?', a: 'Yes. Mentors, template repos, and lightning how-tos run all day.' },
-  ],
-  stats: [
-    { title: 'Mentors', value: '15', caption: 'Product · AI/ML · DevOps' },
-    { title: 'Tracks', value: '4', caption: 'Mobility · Civic · Resilience · Open data' },
-    { title: 'Support', value: '24/7', caption: 'Wi-Fi · Charging · Mentors' },
-  ],
-  registerNote: 'Seats limited to 20 teams. We will confirm within 48 hours.',
-};
+const template: Content = defaultContent;
 
 function AdminInner() {
   const search = useSearchParams();

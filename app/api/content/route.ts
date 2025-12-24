@@ -1,13 +1,38 @@
 import { readContent, writeContent } from '@/app/lib/store';
-import { ContentSchema } from '@/app/lib/content';
+import { Content, ContentSchema } from '@/app/lib/content';
+import { defaultContent } from '@/app/lib/defaultContent';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
+
+const legacyTrackBodies = new Set([
+  'Mobility · Civic tools\nResilience · Open data',
+  'Urban mobility · Civic tools\nResilience infra · Open data',
+]);
+
+function isLegacyContent(content: Content): boolean {
+  const trackBody = content.details
+    ?.find((d) => d.title?.toLowerCase() === 'tracks')
+    ?.body?.trim();
+  if (!trackBody) return false;
+  return legacyTrackBodies.has(trackBody);
+}
 
 export async function GET() {
   const data = await readContent();
   if (!data) {
     return NextResponse.json({ ok: false, message: 'No event published yet.' }, { status: 404 });
   }
+
+  if (isLegacyContent(data)) {
+    try {
+      await writeContent(defaultContent);
+      return NextResponse.json({ ok: true, content: defaultContent, migrated: true });
+    } catch (err) {
+      console.error('content migration failed', err);
+      return NextResponse.json({ ok: true, content: defaultContent, migrated: false });
+    }
+  }
+
   return NextResponse.json({ ok: true, content: data });
 }
 

@@ -14,16 +14,14 @@ async function main() {
   const content = {
     hero: {
       title: 'Hack The Throne',
-      tagline: 'Build together at AIT CSE. Open only to 2ⁿᵈ Year CSE students.',
+      tagline: 'Explore the Web',
       badges: ['AIT CSE campus', 'On-campus', '2ⁿᵈ Year CSE only', 'Mentors on-call'],
     },
     details: [
       { title: 'Venue', body: 'AIT CSE Campus' },
       { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
-      { title: 'Tracks', body: 'Mobility · Civic tools\nResilience · Open data' },
-      { title: 'Support', body: 'Wi-Fi, charging, mentors on-call, quiet room' },
+      { title: 'Tracks', body: 'Basic · Advanced' },
       { title: 'Team rules', body: 'Teams of 4–6\nFresh work only' },
-      { title: 'Judging', body: 'Impact · Feasibility · Craft · Live demo clarity' },
     ],
     schedule: [],
     team: [
@@ -50,7 +48,7 @@ async function main() {
       { title: 'Mode', value: 'On-campus', caption: 'AIT CSE Campus' },
       { title: 'Support', value: 'Mentors', caption: 'Product · AI/ML · DevOps' },
     ],
-    registerNote: 'Open only to 2ⁿᵈ Year CSE students. Confirm your details for review.',
+    registerNote: 'Open only to 2ⁿᵈ Year CSE students. Confirm your details to request a slot.',
   };
 
   await client.set('content:current', JSON.stringify(content));
