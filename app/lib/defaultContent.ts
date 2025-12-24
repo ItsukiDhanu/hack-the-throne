@@ -12,7 +12,12 @@ export const defaultContent: Content = {
     { title: 'Tracks', body: 'Basic · Advanced' },
     { title: 'Team rules', body: 'Teams of 4–6\nFresh work only' },
   ],
-  schedule: [],
+  schedule: [
+    { time: 'Dec 24', title: 'Registrations open', body: 'Online registrations go live.' },
+    { time: 'Dec 29', title: 'Registrations close', body: 'Last day to submit your team details.' },
+    { time: 'Dec 30', title: 'Hackathon starts', body: 'Kickoff, team check-in, and problem statements.' },
+    { time: 'Dec 31', title: 'Hackathon ends', body: 'Project submissions, demos, and closing.' },
+  ],
   team: [
     { name: 'Ayush Kaushik', role: 'Lead Organizer' },
     { name: 'Ethan Dsouza', role: 'Tech Lead (Co-Organizer)' },
@@ -37,5 +42,5 @@ export const defaultContent: Content = {
     { title: 'Mode', value: 'On-campus', caption: 'AIT CSE Campus' },
     { title: 'Support', value: 'Mentors', caption: 'Product · AI/ML · DevOps' },
   ],
-  registerNote: 'Open only to 2ⁿᵈ Year CSE students. Confirm your details to request a slot.',
+  registerNote: 'Registrations are open until Dec 29. Open only to 2ⁿᵈ Year CSE students.',
 };

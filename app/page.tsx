@@ -7,6 +7,8 @@ import HttWhiteLogo from '../HTT White Logo (1).png';
 import type { Content } from './lib/content';
 import { defaultContent } from './lib/defaultContent';
 
+const EVENT_START_TS = new Date('2025-12-30T00:00:00+05:30').getTime();
+
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 
 const navLinks = [
@@ -47,6 +49,8 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<Content | null>(null);
   const [loadingContent, setLoadingContent] = useState(true);
+  const [countdown, setCountdown] = useState('');
+  const [eventLive, setEventLive] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -64,9 +68,32 @@ export default function Page() {
     load();
   }, []);
 
+  useEffect(() => {
+    function updateCountdown() {
+      const diff = EVENT_START_TS - Date.now();
+      if (diff <= 0) {
+        setEventLive(true);
+        setCountdown('Event is live');
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+    }
+
+    updateCountdown();
+    const id = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
   const data = content ?? defaultContent;
   const stats = data.stats ?? defaultContent.stats!;
   const faqs = useMemo(() => data.faqs || [], [data]);
+  const schedule = useMemo(() => data.schedule || [], [data]);
   const details = useMemo(
     () => (data.details || []).filter((d) => d?.title?.toLowerCase() !== 'support'),
     [data]
@@ -198,26 +225,66 @@ export default function Page() {
                 {noContent ? 'Registration closed' : 'Register now'}
               </a>
             </div>
+            <div className="mx-auto max-w-3xl glass relative overflow-hidden rounded-3xl px-6 py-5 text-center text-base text-base-200 shadow-card">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" aria-hidden />
+              <div className="relative flex flex-col gap-2">
+                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-accent-primary">Countdown</p>
+                <p className="text-2xl font-semibold text-white">{eventLive ? 'Event is live' : countdown || 'Loading…'}</p>
+                <p className="text-sm text-base-300">Hackathon starts on Dec 30</p>
+              </div>
+            </div>
           </div>
 
           <div id="events" className="glass relative overflow-hidden rounded-3xl px-6 py-6 shadow-deep">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5" aria-hidden />
             <div className="relative space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent-primary">Events</p>
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-base-100">Status</span>
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-accent-primary">Events</p>
+                  <p className="text-base font-semibold text-white">Hack The Throne · Hackathon</p>
+                </div>
+                <span className={clsx(
+                  'rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide',
+                  eventLive
+                    ? 'border border-emerald-400/50 bg-emerald-400/10 text-emerald-200'
+                    : 'border border-accent-primary/50 bg-accent-primary/10 text-accent-primary'
+                )}>
+                  {eventLive ? 'Live now' : 'Upcoming'}
+                </span>
               </div>
-              <div className="rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-6 text-sm text-base-200">
-                <p className="text-base font-semibold text-white">No active events right now.</p>
-                <p className="text-sm text-base-300">We’ll publish the next cohort soon. Check back or join the mailing list.</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <a className="rounded-full bg-gradient-to-r from-accent-blue via-accent-primary to-accent-secondary px-4 py-2 text-sm font-semibold text-base-950 shadow-lg shadow-glow ring-1 ring-white/10 btn-animated cta-glow" href="#register">
-                  Get notified
-                </a>
-                <a className="text-sm font-semibold text-accent-primary underline-offset-4 hover:underline leading-none" href="#faq">
-                  View FAQ
-                </a>
+
+              <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wide">
+                    <span className="rounded-full bg-accent-primary/10 px-3 py-1 text-accent-primary">{eventLive ? 'Event is live' : countdown || 'Loading…'}</span>
+                    <span className="rounded-full bg-white/5 px-3 py-1 text-base-200">Starts Dec 30</span>
+                    <span className="rounded-full bg-white/5 px-3 py-1 text-base-200">Registrations close Dec 29</span>
+                  </div>
+                  <p className="text-sm text-base-200">Sprint with your team, ship a demo, and present on campus. Seats are limited—register while slots are open.</p>
+                  <div className="flex flex-wrap gap-2 text-xs text-base-300">
+                    <span className="rounded-full bg-white/5 px-3 py-1">Venue: AIT CSE Campus</span>
+                    <span className="rounded-full bg-white/5 px-3 py-1">Mode: On-campus</span>
+                    <span className="rounded-full bg-white/5 px-3 py-1">Eligibility: 2ⁿᵈ Year CSE</span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <a className="text-sm font-semibold text-accent-primary underline-offset-4 hover:underline leading-none" href="#faq">
+                      View FAQ
+                    </a>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent-primary">Roadmap</p>
+                  <div className="mt-3 space-y-3">
+                    {(schedule.length ? schedule : defaultContent.schedule).map((item) => (
+                      <div key={`${item.time}-${item.title}`} className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-accent-primary">{item.time}</p>
+                        <p className="text-sm font-semibold text-white">{item.title}</p>
+                        <p className="text-xs text-base-300">{item.body}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -560,7 +627,7 @@ function Field({
     <label className="block text-sm text-base-100">
       <span className="mb-2 block font-semibold text-white">{label}{required ? ' *' : ''}</span>
       <input
-        className="w-full rounded-xl glossy-input px-4 py-3 text-white outline-none ring-0 transition focus:border-accent-blue focus-glow"
+        className="w-full rounded-xl glossy-input px-4 py-3 text-white outline-none ring-0 transition-colors duration-150 focus:border-accent-blue"
         name={name}
         type={type}
         placeholder={placeholder}
