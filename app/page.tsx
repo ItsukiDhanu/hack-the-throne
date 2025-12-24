@@ -213,19 +213,21 @@ export default function Page() {
             aria-hidden
           />
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-accent-primary">
-              AIT CSE · On-campus · 2ⁿᵈ Year CSE only
+            <div className="flex justify-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm font-semibold text-accent-primary">
+                AIT CSE · On-campus · 2ⁿᵈ Year CSE only
+              </div>
             </div>
-              <div className="space-y-3">
+              <div className="space-y-3 flex flex-col items-center text-center">
                 <h1 className="hero-title-animate hero-outline font-kanji text-5xl sm:text-6xl md:text-7xl leading-tight">{data.hero.title}</h1>
                 <p className="hero-tagline-animate font-dancing mx-auto block max-w-3xl text-center text-3xl sm:text-4xl md:text-5xl leading-tight">{data.hero.tagline}</p>
               </div>
-            <div className="flex flex-wrap gap-3 text-sm text-base-100">
+            <div className="flex flex-wrap justify-center gap-3 text-sm text-base-100">
               {badges.map((b) => (
                 <Pill key={b} label={b} />
               ))}
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               <a
                 className={clsx(
                   'rounded-2xl bg-gradient-to-r from-accent-blue to-accent-secondary px-5 py-3 text-base font-semibold text-base-950 shadow-lg shadow-glow btn-animated cta-glow',
