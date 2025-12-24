@@ -223,7 +223,7 @@ export default function Page() {
           </div>
         </section>
 
-        <section id="hackathon" className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+        <section id="hackathon" className="space-y-5">
           <div className="rounded-3xl border border-white/5 bg-white/5 px-6 py-5">
             <SectionHeading eyebrow="What is a hackathon?" title="Build, demo, and get feedback fast" description="Two days to form a team, pick a problem, ship a working demo, and present it live." />
             <div className="mt-4 space-y-3 text-base text-base-200">
@@ -239,25 +239,6 @@ export default function Page() {
                 Join the sprint
               </a>
             </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            {galleryImages.slice(0, 2).map((img) => (
-              <div
-                key={img.src}
-                className="group relative overflow-hidden rounded-3xl bg-base-900/40 float-card shadow-lg shadow-base-900/40 transition-transform duration-500 hover:-translate-y-1 hover:shadow-base-900/60"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  width={1200}
-                  height={800}
-                  unoptimized
-                  className="h-48 w-full object-cover transition duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-            ))}
           </div>
         </section>
 
