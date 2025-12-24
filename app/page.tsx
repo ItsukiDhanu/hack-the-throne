@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { FormEvent, useEffect, useMemo, useState, type ComponentProps } from 'react';
 import { clsx } from 'clsx';
+import HttWhiteLogo from '../HTT White Logo (1).png';
 import type { Content } from './lib/content';
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
@@ -86,6 +87,7 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<Content | null>(null);
   const [loadingContent, setLoadingContent] = useState(true);
+  const [enableSpotlight, setEnableSpotlight] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -103,52 +105,9 @@ export default function Page() {
     load();
   }, []);
 
+  // Spotlight effect fully disabled to reduce GPU/CPU/RAM usage.
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    const root = document.documentElement;
-    const body = document.body;
-    let targetX = window.innerWidth * 0.5;
-    let targetY = window.innerHeight * 0.5;
-    let currentX = targetX;
-    let currentY = targetY;
-    let raf = 0;
-
-    const update = () => {
-      currentX += (targetX - currentX) * 0.12;
-      currentY += (targetY - currentY) * 0.12;
-      root.style.setProperty('--spot-x', `${currentX}px`);
-      root.style.setProperty('--spot-y', `${currentY}px`);
-      raf = requestAnimationFrame(update);
-    };
-
-    const handleMove = (event: PointerEvent) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
-      body.classList.add('spotlight-active');
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-
-    const handleLeave = () => {
-      body.classList.remove('spotlight-active');
-      targetX = window.innerWidth * 0.5;
-      targetY = window.innerHeight * 0.5;
-    };
-
-    raf = requestAnimationFrame(update);
-    window.addEventListener('pointermove', handleMove);
-    window.addEventListener('pointerenter', handleMove);
-    window.addEventListener('pointerleave', handleLeave);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      window.removeEventListener('pointermove', handleMove);
-      window.removeEventListener('pointerenter', handleMove);
-      window.removeEventListener('pointerleave', handleLeave);
-      body.classList.remove('spotlight-active');
-    };
+    setEnableSpotlight(false);
   }, []);
 
   const data = content ?? demoContent;
@@ -221,13 +180,15 @@ export default function Page() {
       </div>
 
       <header className="sticky top-0 z-30 border-b border-white/10 bg-white/10 backdrop-blur-xl shadow-[0_12px_60px_rgba(0,0,0,0.45)]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <a href="#top" className="inline-block">
-              <div className="flex flex-col gap-1">
-                <span className="text-3xl sm:text-4xl font-semibold text-white leading-tight transition-colors hover:text-accent-primary">Hack The Throne</span>
-                  <span className="text-sm font-medium text-base-300">Explore the Web</span>
-              </div>
+              <Image
+                src={HttWhiteLogo}
+                alt="Hack The Throne"
+                className="h-24 w-auto sm:h-28"
+                priority
+              />
             </a>
           </div>
           <nav className="flex flex-wrap gap-3 text-sm">
@@ -262,8 +223,8 @@ export default function Page() {
               AIT CSE · On-campus · 2ⁿᵈ Year CSE only
             </div>
               <div className="space-y-3">
-                <h1 className="hero-title-animate text-4xl sm:text-5xl md:text-6xl leading-tight">{data.hero.title}</h1>
-                <p className="max-w-2xl text-lg text-base-200">{data.hero.tagline}</p>
+                <h1 className="hero-title-animate hero-outline font-kanji text-6xl sm:text-7xl md:text-8xl leading-tight">{data.hero.title}</h1>
+                <p className="hero-tagline-animate font-dancing mx-auto block max-w-3xl text-center text-4xl sm:text-5xl md:text-6xl leading-tight">{data.hero.tagline}</p>
               </div>
             <div className="flex flex-wrap gap-3 text-sm text-base-100">
               {badges.map((b) => (
@@ -485,21 +446,33 @@ export default function Page() {
               </div>
 
               {error && <p className="text-sm text-red-400">{error}</p>}
-              <div className="flex flex-wrap items-center gap-3">
-                <p className="text-sm font-semibold italic text-red-300 drop-shadow">Just One Question : Are You Ready to Claim The Throne ??...</p>
+              <div className="flex flex-col items-start gap-3">
+                <p className="font-dancing text-2xl font-semibold text-red-200 drop-shadow">Just One Question : Are You Ready to Claim The Throne ...???</p>
                 <button
                   className={clsx(
-                    'rounded-2xl px-5 py-3 text-base font-semibold shadow-lg shadow-glow btn-animated cta-glow',
+                    'font-dancing rounded-2xl px-5 py-3 text-lg font-semibold shadow-lg shadow-glow btn-animated cta-glow',
                     'bg-gradient-to-r from-accent-blue to-accent-secondary text-base-950',
                     (formState === 'submitting' || noContent) && 'opacity-80'
                   )}
                   type="submit"
                   disabled={formState === 'submitting' || noContent}
                 >
-                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'Yes ( Submit)'}
+                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'yes(Submit)'}
                 </button>
                 {formState === 'success' && (
-                  <span className="rounded-2xl bg-accent-primary/10 px-3 py-2 text-sm font-semibold text-accent-primary">Thanks! We received your registration.</span>
+                  <div className="flex flex-col gap-2 rounded-2xl bg-accent-primary/10 px-3 py-2 text-sm text-accent-primary">
+                    <span className="font-semibold">Thanks!  We received your registration.</span>
+                    <a
+                      className="inline-flex items-center gap-1 text-base font-semibold underline underline-offset-4 hover:text-accent-blue"
+                      href="https://chat.whatsapp.com/H5JUL4SW1PqKM6gNZ5wGmh"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Join the WhatsApp Participants Group
+                      <span aria-hidden>→</span>
+                    </a>
+                    <span className="text-xs text-accent-primary/80">Use this link to get schedule updates, venue details, and mentor alerts.</span>
+                  </div>
                 )}
               </div>
             </form>
@@ -608,14 +581,14 @@ function InfoCard({ title, body, subtle }: { title: string; body: string; subtle
 
 function TeamCard({ member }: { member: { name: string; role: string } }) {
   return (
-    <div className="glass rounded-2xl p-4 shadow-card float-card">
+    <div className="glass rounded-2xl p-4 shadow-card float-card flex flex-col items-center text-center gap-3">
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent-blue to-accent-secondary text-base font-bold text-base-950">
         {member.name
           .split(' ')
           .map((p) => p[0])
           .join('')}
       </div>
-      <p className="mt-3 text-lg font-semibold text-white">{member.name}</p>
+      <p className="text-xl font-semibold text-white">{member.name}</p>
       <p className="text-sm text-base-300">{member.role}</p>
     </div>
   );

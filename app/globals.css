@@ -1,5 +1,7 @@
 /* vscode-css-validate disable */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
 
 /* stylelint-disable at-rule-no-unknown */
 @tailwind base;
@@ -25,6 +27,23 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+.font-dancing {
+  font-family: 'Dancing Script', 'Plus Jakarta Sans', 'SF Pro Display', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.font-kanji {
+  font-family: 'Jersey 10', 'Plus Jakarta Sans', 'SF Pro Display', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.06em;
+}
+
+.hero-outline {
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    0 0 4px rgba(0, 0, 0, 0.88),
+    0 1px 6px rgba(0, 0, 0, 0.85),
+    0 0 10px rgba(0, 0, 0, 0.82);
 }
 
 .cursor-spotlight {
@@ -282,11 +301,59 @@ body.spotlight-active .cursor-spotlight {
   -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.24);
   animation: heroSheen 10s ease-in-out infinite;
   text-shadow:
-    0 4px 24px rgba(120, 180, 255, 0.22),
-    0 0 16px rgba(255, 255, 255, 0.22),
-    0 0 32px rgba(124, 140, 255, 0.18);
+    0 2px 12px rgba(120, 180, 255, 0.2),
+    0 0 10px rgba(255, 255, 255, 0.18),
+    0 0 18px rgba(124, 140, 255, 0.16);
   letter-spacing: -0.022em;
   font-weight: 700;
+}
+
+.hero-tagline-animate {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(115deg, #9fe7ff 0%, #b8e1ff 26%, #ffd9f6 60%, #d8c6ff 100%);
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 0.4px rgba(255, 255, 255, 0.18);
+  animation: heroSheen 10s ease-in-out infinite reverse;
+  text-shadow:
+    0 2px 16px rgba(120, 200, 255, 0.22),
+    0 0 10px rgba(255, 255, 255, 0.18),
+    0 0 18px rgba(124, 160, 255, 0.16);
+  letter-spacing: -0.014em;
+  font-weight: 600;
+}
+
+.hero-tagline-animate::before {
+  content: '';
+  position: absolute;
+  inset: -12% -10% -6% -10%;
+  background:
+    radial-gradient(38% 24% at 24% 26%, rgba(158, 214, 255, 0.22), transparent 60%),
+    radial-gradient(34% 22% at 76% 32%, rgba(255, 185, 255, 0.18), transparent 62%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.12), rgba(120, 180, 255, 0.06) 46%, rgba(255, 192, 255, 0.08));
+  mix-blend-mode: screen;
+  filter: blur(16px) saturate(1.05) hue-rotate(-4deg);
+  opacity: 0.44;
+  z-index: -2;
+  animation: heroFlux 11s ease-in-out infinite alternate-reverse;
+}
+
+.hero-tagline-animate::after {
+  content: '';
+  position: absolute;
+  inset: -16% -8% -8% -8%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(140, 200, 255, 0.18), transparent 48%),
+    radial-gradient(circle at 68% 34%, rgba(255, 170, 255, 0.18), transparent 50%),
+    radial-gradient(circle at 54% 68%, rgba(120, 180, 255, 0.15), transparent 54%);
+  filter: blur(18px) saturate(1.08);
+  opacity: 0.35;
+  z-index: -1;
+  mix-blend-mode: screen;
+  animation: heroPulse 8s ease-in-out infinite alternate-reverse;
 }
 
 .hero-title-animate::before {
@@ -298,8 +365,8 @@ body.spotlight-active .cursor-spotlight {
     radial-gradient(40% 26% at 78% 24%, rgba(255, 185, 255, 0.26), transparent 60%),
     linear-gradient(120deg, rgba(255, 255, 255, 0.16), rgba(120, 180, 255, 0.08) 40%, rgba(255, 192, 255, 0.1));
   mix-blend-mode: screen;
-  filter: blur(18px) saturate(1.08) hue-rotate(4deg);
-  opacity: 0.5;
+  filter: blur(12px) saturate(1.06) hue-rotate(2deg);
+  opacity: 0.38;
   z-index: -2;
   animation: heroFlux 12s ease-in-out infinite alternate;
 }
@@ -311,8 +378,8 @@ body.spotlight-active .cursor-spotlight {
   background: radial-gradient(circle at 30% 20%, rgba(140, 200, 255, 0.25), transparent 45%),
     radial-gradient(circle at 70% 30%, rgba(255, 170, 255, 0.22), transparent 48%),
     radial-gradient(circle at 50% 70%, rgba(120, 180, 255, 0.18), transparent 52%);
-  filter: blur(22px) saturate(1.12);
-  opacity: 0.42;
+  filter: blur(14px) saturate(1.08);
+  opacity: 0.32;
   z-index: -1;
   mix-blend-mode: screen;
   animation: heroPulse 9s ease-in-out infinite alternate;
