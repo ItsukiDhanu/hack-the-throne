@@ -88,6 +88,12 @@ function RegistrationsInner() {
       setError('Admin token required');
       return;
     }
+
+    const target = registrations.find((r) => r.id === id);
+    const label = target ? `${target.teamName} (${target.leaderName})` : 'this registration';
+    const ok = window.confirm(`Delete ${label}? This action cannot be undone.`);
+    if (!ok) return;
+
     setDeletingId(id);
     try {
       const qs = new URLSearchParams({ id });

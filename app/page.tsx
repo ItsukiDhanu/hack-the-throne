@@ -179,7 +179,7 @@ export default function Page() {
         <div className="cursor-spotlight" />
       </div>
 
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-white/10 backdrop-blur-xl shadow-[0_12px_60px_rgba(0,0,0,0.45)]">
+      <header className="sticky top-0 z-30 bg-white/10 backdrop-blur-xl shadow-[0_12px_60px_rgba(0,0,0,0.45)] transition-[background,box-shadow,transform] duration-200 hover:bg-white/14 header-blend relative">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <a href="#top" className="inline-block">
@@ -191,11 +191,11 @@ export default function Page() {
               />
             </a>
           </div>
-          <nav className="flex flex-wrap gap-3 text-sm">
+          <nav className="flex flex-wrap gap-4 text-base">
             {navLinks.map((item) => (
               <a
                 key={item.href}
-                className="px-2 py-1 text-sm font-medium text-white/80 transition-colors duration-150 hover:text-white"
+                className="relative px-2 py-1 font-semibold text-white/80 transition-colors duration-200 hover:text-white after:absolute after:left-0 after:bottom-[-4px] after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-accent-primary after:transition after:duration-200 hover:after:scale-x-100"
                 href={`#${item.href}`}
               >
                 {item.label}
