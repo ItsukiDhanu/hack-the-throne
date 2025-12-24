@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap');
 
 /* stylelint-disable at-rule-no-unknown */
 @tailwind base;
@@ -36,6 +37,11 @@ body {
 .font-kanji {
   font-family: 'Jersey 10', 'Plus Jakarta Sans', 'SF Pro Display', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   letter-spacing: 0.06em;
+}
+
+.font-grotesk {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', 'SF Pro Display', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.02em;
 }
 
 .hero-outline {

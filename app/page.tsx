@@ -401,7 +401,7 @@ export default function Page() {
                 <p className="font-dancing text-2xl font-semibold text-red-200 drop-shadow">Just One Question : Are You Ready to Claim The Throne ...???</p>
                 <button
                   className={clsx(
-                    'font-dancing rounded-2xl px-5 py-3 text-lg font-semibold shadow-lg shadow-glow btn-animated cta-glow',
+                    'font-grotesk tracking-tight rounded-2xl px-5 py-3 text-lg font-semibold shadow-lg shadow-glow btn-animated cta-glow',
                     'bg-gradient-to-r from-accent-blue to-accent-secondary text-base-950',
                     (formState === 'submitting' || noContent) && 'opacity-80'
                   )}
