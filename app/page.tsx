@@ -7,7 +7,7 @@ import HttWhiteLogo from '../HTT White Logo (1).png';
 import type { Content } from './lib/content';
 import { defaultContent } from './lib/defaultContent';
 
-const EVENT_START_TS = new Date('2025-12-30T00:00:00+05:30').getTime();
+const EVENT_START_TS = new Date('2025-12-30T12:00:00+05:30').getTime();
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -456,7 +456,7 @@ export default function Page() {
                   type="submit"
                   disabled={formState === 'submitting' || noContent}
                 >
-                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'yes(Submit)'}
+                  {noContent ? 'Registration closed' : formState === 'submitting' ? 'Submitting…' : 'Yes, Submit'}
                 </button>
                 {formState === 'success' && (
                   <div className="flex flex-col gap-2 rounded-2xl bg-accent-primary/10 px-3 py-2 text-sm text-accent-primary">
