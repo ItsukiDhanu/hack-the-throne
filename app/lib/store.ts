@@ -174,6 +174,27 @@ export async function deleteRegistration(id: string): Promise<void> {
   await client.zRem('registration:index', id);
 }
 
+export async function deleteAllRegistrations(): Promise<void> {
+  if (hasKv) {
+    const ids = await kv.zrange('registration:index', 0, -1);
+    if (ids.length) {
+      const keys = ids.map((id) => `registration:${id}`);
+      await kv.del(...keys);
+    }
+    await kv.del('registration:index');
+    return;
+  }
+
+  const client = await getRedisClient();
+  if (!client) throw new Error('Storage not configured (KV or REDIS_URL missing)');
+
+  const ids = await client.zRange('registration:index', 0, -1, { REV: false });
+  if (ids.length) {
+    await client.del(...ids.map((id) => `registration:${id}`));
+  }
+  await client.del('registration:index');
+}
+
 export async function teamNameExists(name: string): Promise<boolean> {
   const target = name.trim().toLowerCase();
   if (!target) return false;

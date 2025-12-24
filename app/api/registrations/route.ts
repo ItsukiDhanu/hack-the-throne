@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { listRegistrations, deleteRegistration } from '@/app/lib/store';
+import { listRegistrations, deleteRegistration, deleteAllRegistrations } from '@/app/lib/store';
 
 export async function GET(request: Request) {
   const adminToken = process.env.ADMIN_TOKEN;
@@ -38,25 +38,30 @@ export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const queryToken = searchParams.get('token');
   const id = searchParams.get('id');
+  const removeAll = searchParams.get('all') === 'true' || searchParams.get('all') === '1';
 
-  if (!id) {
-    return NextResponse.json({ ok: false, error: 'Missing id' }, { status: 400 });
-  }
+  const token =
+    authHeader?.replace(/Bearer\s+/i, '').trim() ||
+    xAdminHeader?.trim() ||
+    queryToken?.trim();
 
   if (adminToken) {
-    const token =
-      authHeader?.replace(/Bearer\s+/i, '').trim() ||
-      xAdminHeader?.trim() ||
-      queryToken?.trim();
-
     if (!token || token !== adminToken) {
       return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
     }
   }
 
+  if (!id && !removeAll) {
+    return NextResponse.json({ ok: false, error: 'Missing id' }, { status: 400 });
+  }
+
   try {
-    await deleteRegistration(id);
-    return NextResponse.json({ ok: true });
+    if (removeAll) {
+      await deleteAllRegistrations();
+    } else if (id) {
+      await deleteRegistration(id);
+    }
+    return NextResponse.json({ ok: true, clearedAll: removeAll });
   } catch (err) {
     console.error('deleteRegistration error', err);
     return NextResponse.json({ ok: false, error: 'Failed to delete registration' }, { status: 500 });

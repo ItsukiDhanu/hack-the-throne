@@ -35,6 +35,7 @@ function RegistrationsInner() {
   const [registrations, setRegistrations] = useState<RegistrationPayload[]>([]);
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingAll, setDeletingAll] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
 
@@ -113,6 +114,37 @@ function RegistrationsInner() {
     }
   }
 
+  async function removeAll() {
+    setError(null);
+    setStatus(null);
+    const auth = token.trim();
+    if (!auth) {
+      setError('Admin token required');
+      return;
+    }
+
+    const ok = window.confirm('Delete ALL registrations? This cannot be undone.');
+    if (!ok) return;
+
+    setDeletingAll(true);
+    try {
+      const qs = new URLSearchParams({ all: 'true' });
+      qs.set('token', auth);
+      const res = await fetch(`/api/registrations?${qs.toString()}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${auth}`, 'x-admin-token': auth },
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to delete all');
+      setRegistrations([]);
+      setStatus('Deleted all registrations');
+    } catch (err: any) {
+      setError(err?.message || 'Error deleting all');
+    } finally {
+      setDeletingAll(false);
+    }
+  }
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 space-y-6">
       <div className="flex items-center justify-between gap-4">
@@ -159,6 +191,14 @@ function RegistrationsInner() {
             type="button"
           >
             Download CSV
+          </button>
+          <button
+            onClick={removeAll}
+            disabled={!registrations.length || deletingAll}
+            className="rounded-lg border border-red-500/60 px-4 py-2 font-semibold text-red-200 hover:border-red-400 btn-outline-animated disabled:opacity-60"
+            type="button"
+          >
+            {deletingAll ? 'Deleting all…' : 'Delete all'}
           </button>
         </div>
       </div>
