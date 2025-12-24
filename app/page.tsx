@@ -217,8 +217,8 @@ export default function Page() {
               AIT CSE · On-campus · 2ⁿᵈ Year CSE only
             </div>
               <div className="space-y-3">
-                <h1 className="hero-title-animate hero-outline font-kanji text-6xl sm:text-7xl md:text-8xl leading-tight">{data.hero.title}</h1>
-                <p className="hero-tagline-animate font-dancing mx-auto block max-w-3xl text-center text-4xl sm:text-5xl md:text-6xl leading-tight">{data.hero.tagline}</p>
+                <h1 className="hero-title-animate hero-outline font-kanji text-5xl sm:text-6xl md:text-7xl leading-tight">{data.hero.title}</h1>
+                <p className="hero-tagline-animate font-dancing mx-auto block max-w-3xl text-center text-3xl sm:text-4xl md:text-5xl leading-tight">{data.hero.tagline}</p>
               </div>
             <div className="flex flex-wrap gap-3 text-sm text-base-100">
               {badges.map((b) => (
@@ -371,7 +371,6 @@ export default function Page() {
                 <h2 className="text-2xl font-semibold text-white">Registration</h2>
                 <p className="text-base-300">{content?.registerNote || 'Registration opens when the next event is published.'}</p>
               </div>
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent-primary">On-site only</span>
             </div>
 
             <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
