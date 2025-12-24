@@ -190,7 +190,8 @@ export async function deleteAllRegistrations(): Promise<void> {
 
   const ids = await client.zRange('registration:index', 0, -1, { REV: false });
   if (ids.length) {
-    await client.del(...ids.map((id) => `registration:${id}`));
+    const deleteKeys = ids.map((id) => `registration:${id}`);
+    await client.del(deleteKeys as any);
   }
   await client.del('registration:index');
 }
