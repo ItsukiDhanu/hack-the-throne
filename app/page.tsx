@@ -17,7 +17,7 @@ const demoContent: Content = {
   details: [
     { title: 'Venue', body: 'AIT CSE Campus' },
     { title: 'Eligibility', body: '2ⁿᵈ Year CSE students only' },
-    { title: 'Tracks', body: 'Mobility · Civic tools\nResilience · Open data' },
+    { title: 'Tracks', body: 'Basic · Advanced' },
     { title: 'Team rules', body: 'Teams of 4–6\nFresh work only' },
 
   ],
