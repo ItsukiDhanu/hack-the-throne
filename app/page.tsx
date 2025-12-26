@@ -397,50 +397,30 @@ export default function Page() {
               <GroupHeading title="Member 1" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member1Name" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="member1Section" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
-                <Field label="USN" name="member1USN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
-                <Field label="WhatsApp Number" name="member1Whatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
-                <Field label="Acharya Mail ID" name="member1Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
                 <Field label="Hackathons attended before" name="member1Hackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 2" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member2Name" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="member2Section" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
-                <Field label="USN" name="member2USN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
-                <Field label="WhatsApp Number" name="member2Whatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
-                <Field label="Acharya Mail ID" name="member2Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
                 <Field label="Hackathons attended before" name="member2Hackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 3" required />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member3Name" placeholder="Full name" required disabled={noContent} />
-                <Field label="Section" name="member3Section" placeholder="Section (A/B/C/D)" required disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
-                <Field label="USN" name="member3USN" placeholder="USN" required disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
-                <Field label="WhatsApp Number" name="member3Whatsapp" type="tel" placeholder="WhatsApp number" required disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
-                <Field label="Acharya Mail ID" name="member3Email" type="email" placeholder="name@acharya.ac.in" required disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
                 <Field label="Hackathons attended before" name="member3Hackathons" type="number" placeholder="0" required disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 4" />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member4Name" placeholder="Full name" disabled={noContent} />
-                <Field label="Section" name="member4Section" placeholder="Section (A/B/C/D)" disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
-                <Field label="USN" name="member4USN" placeholder="USN" disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
-                <Field label="WhatsApp Number" name="member4Whatsapp" type="tel" placeholder="WhatsApp number" disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
-                <Field label="Acharya Mail ID" name="member4Email" type="email" placeholder="name@acharya.ac.in" disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
                 <Field label="Hackathons attended before" name="member4Hackathons" type="number" placeholder="0" disabled={noContent} />
               </div>
 
               <GroupHeading title="Member 5" />
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="Name" name="member5Name" placeholder="Full name" disabled={noContent} />
-                <Field label="Section" name="member5Section" placeholder="Section (A/B/C/D)" disabled={noContent} pattern="[A-Da-d]" maxLength={1} />
-                <Field label="USN" name="member5USN" placeholder="USN" disabled={noContent} pattern="[A-Za-z0-9]{10}" maxLength={10} />
-                <Field label="WhatsApp Number" name="member5Whatsapp" type="tel" placeholder="WhatsApp number" disabled={noContent} pattern="[0-9]{10}" maxLength={10} inputMode="numeric" />
-                <Field label="Acharya Mail ID" name="member5Email" type="email" placeholder="name@acharya.ac.in" disabled={noContent} pattern="[A-Za-z0-9.+_-]+@[A-Za-z0-9.-]+\\.[A-Za-z0-9.-]+" />
                 <Field label="Hackathons attended before" name="member5Hackathons" type="number" placeholder="0" disabled={noContent} />
               </div>
 

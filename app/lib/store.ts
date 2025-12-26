@@ -63,38 +63,18 @@ type RegistrationPayload = {
   leaderHackathons: string;
 
   member1Name: string;
-  member1Section: string;
-  member1USN: string;
-  member1Whatsapp: string;
-  member1Email: string;
   member1Hackathons: string;
 
   member2Name: string;
-  member2Section: string;
-  member2USN: string;
-  member2Whatsapp: string;
-  member2Email: string;
   member2Hackathons: string;
 
   member3Name: string;
-  member3Section: string;
-  member3USN: string;
-  member3Whatsapp: string;
-  member3Email: string;
   member3Hackathons: string;
 
   member4Name?: string;
-  member4Section?: string;
-  member4USN?: string;
-  member4Whatsapp?: string;
-  member4Email?: string;
   member4Hackathons?: string;
 
   member5Name?: string;
-  member5Section?: string;
-  member5USN?: string;
-  member5Whatsapp?: string;
-  member5Email?: string;
   member5Hackathons?: string;
 };
 

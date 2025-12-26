@@ -8,11 +8,11 @@ function toCsv(rows: RegistrationPayload[]) {
   const headers = [
     'id','createdAt','teamTag','teamName','track','advancedMembers',
     'leaderName','leaderSection','leaderUSN','leaderWhatsapp','leaderEmail','leaderHackathons',
-    'member1Name','member1Section','member1USN','member1Whatsapp','member1Email','member1Hackathons',
-    'member2Name','member2Section','member2USN','member2Whatsapp','member2Email','member2Hackathons',
-    'member3Name','member3Section','member3USN','member3Whatsapp','member3Email','member3Hackathons',
-    'member4Name','member4Section','member4USN','member4Whatsapp','member4Email','member4Hackathons',
-    'member5Name','member5Section','member5USN','member5Whatsapp','member5Email','member5Hackathons',
+    'member1Name','member1Hackathons',
+    'member2Name','member2Hackathons',
+    'member3Name','member3Hackathons',
+    'member4Name','member4Hackathons',
+    'member5Name','member5Hackathons',
   ];
   const escape = (v: unknown) => {
     if (v === undefined || v === null) return '';
@@ -75,9 +75,11 @@ function RegistrationsInner() {
   const latest = useMemo(() => registrations.slice(0, 5), [registrations]);
 
   const memberCount = (r: RegistrationPayload) => {
-    let count = 4; // leader + member1-3
-    if (r.member4Name) count += 1;
-    if (r.member5Name) count += 1;
+    let count = r.leaderName ? 1 : 0;
+    const names = [r.member1Name, r.member2Name, r.member3Name, r.member4Name, r.member5Name];
+    for (const name of names) {
+      if (name) count += 1;
+    }
     return count;
   };
 
